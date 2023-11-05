@@ -4,6 +4,8 @@
     "com.nianticlabs.lightship.sharedar": "file:sharedar-up-3.0.0.tgz",
     "com.unity.collab-proxy": "2.0.7",
     "com.unity.feature.development": "1.0.1",
+    "com.unity.render-pipelines.universal": "14.0.8",
+    "com.unity.shadergraph": "14.0.8",
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.timeline": "1.7.6",
     "com.unity.ugui": "1.0.0",
