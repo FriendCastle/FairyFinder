@@ -35,15 +35,22 @@ public class HouseController : MonoBehaviour {
     public void Interact() {
         Instantiate(OrderedSparkleExplosion[sparkleIndex], transform.position + SparkleOffset, Quaternion.identity, transform);
         animator.SetTrigger("Disappear");
-
-        if (fairyObject != null) {
-
-        }
+        StartCoroutine(RevealFairy());
     }
 
     public void AddFairy() {
         int random = UnityEngine.Random.Range(0, PossibleFairies.Count - 1);
         fairyObject = Instantiate(PossibleFairies[random], transform.position, Quaternion.identity, transform);
         fairyObject.SetActive(false);
+    }
+
+    IEnumerator RevealFairy() {
+        if (fairyObject != null) {
+            //TODO:: Reveal the fairy and make sure it's not a child of this object
+        }
+
+        yield return new WaitForSeconds(3);
+        Destroy(this.gameObject);
+
     }
 }
