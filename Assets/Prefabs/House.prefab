@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3326114944465906381
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 557614991549371240}
+  - component: {fileID: 1128024128905907340}
+  m_Layer: 0
+  m_Name: House
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &557614991549371240
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3326114944465906381}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1128024128905907340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3326114944465906381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c077cb83f5e264d458a32695f172ce1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PossibleHouses:
+  - {fileID: 9063854277460313038, guid: f17a18fd4d2094647b2df49294934439, type: 3}
+  - {fileID: 6994801980007116773, guid: 7148643621306f04d8c975aed9e8ca2b, type: 3}
+  - {fileID: 2326004469390309918, guid: 6efded94ea43d05468cbde418c864419, type: 3}
+  - {fileID: 5884160870310604727, guid: 753b9386c94080745a374e9cac9753c7, type: 3}
+  - {fileID: 3290793640257877407, guid: 551df0bc54544514eb89c6d9839de532, type: 3}
+  - {fileID: 690151243740788804, guid: d040061f70c829e4198d5359bc764596, type: 3}
+  - {fileID: 4075006398454122996, guid: 84a8c6f9d6b98f34f9f1bfcfc3facb3b, type: 3}
+  - {fileID: 3598609431544665069, guid: 934c6d89057f33342ac0b3d49f278e6c, type: 3}
+  - {fileID: 8972416852742962239, guid: 9928112dabe6c7942894eeaaaad1d2f4, type: 3}
+  - {fileID: 3484707578690560849, guid: 1a2fe67d30d577d4886f8a74e3b21242, type: 3}
+  - {fileID: 6587813665567603382, guid: 4603f04551138924599989da3ca41961, type: 3}
+  - {fileID: 5362592795148857327, guid: cb0899676af783f45a83837824875a11, type: 3}
+  - {fileID: 3049772367680369748, guid: 017b42c55010e0840b1550dce32209f5, type: 3}
+  - {fileID: 2146675209966703680, guid: 078f2e2b4051dee42945b44b484b9c21, type: 3}
+  - {fileID: 8220198373571213772, guid: 7dcfe32100fa4b24e8ec0a59955df558, type: 3}
+  - {fileID: 4544661293932140792, guid: 9524710c133c34145a3599c76c93c89b, type: 3}
+  - {fileID: 7986532648624331916, guid: e5c7f7fca4c3cbd4886c384b4dd3ecc3, type: 3}
+  - {fileID: 9169297653119564953, guid: cfc00ba3a1cae5c408a1e6b3a448ea08, type: 3}
+  - {fileID: 6654554021983036339, guid: d52792c867ea7b848ab136b0d12df335, type: 3}
+  - {fileID: 3859375032557895224, guid: 960af037aaf33794099fa0fd952f561b, type: 3}
+  PossibleFairies:
+  - {fileID: 193350791343668010, guid: b732539cfacdadb4e8a2c3be324d7061, type: 3}
+  OrderedSparkleArea:
+  - {fileID: 126754, guid: db1ef0db102f5864986443fb43fd0f64, type: 3}
+  - {fileID: 144796, guid: 0e5ef80beee6f234b9b27568218dbaf1, type: 3}
+  - {fileID: 1165712415533886, guid: 37c02d01a3a7d964584eb08277eeb869, type: 3}
+  - {fileID: 153838, guid: 80c6b5d330112ef41800a729a58d22e7, type: 3}
+  OrderedSparkleExplosion:
+  - {fileID: 1668877456950060, guid: 6c484679447289e46afc215e1ad87857, type: 3}
+  - {fileID: 1714716063501506, guid: ea6fb368ff0ea2e409d54725029e8021, type: 3}
+  - {fileID: 1359934594507606, guid: e87d77b2ce40fbb4cb11a13a0ec604cd, type: 3}
+  - {fileID: 1438902432858508, guid: 70d6dfe08ec8a1447b4822e95e56918e, type: 3}
+  SparkleOffset: {x: 0, y: 0.75, z: 0}

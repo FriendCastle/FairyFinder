@@ -612,7 +612,7 @@ ParticleSystem:
     enabled: 1
     type: 8
     angle: 0
-    length: 2.1239955
+    length: 50
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
@@ -697,7 +697,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 4.26
+      value: 100
       mode: 0
       spread: 0
       speed:

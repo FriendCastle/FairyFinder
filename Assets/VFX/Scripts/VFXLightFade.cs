@@ -2,7 +2,7 @@
 
 namespace FriendCastleFX
 {
-    public class ETFXLightFade : MonoBehaviour
+    public class VFXLightFade : MonoBehaviour
     {
         public enum OnEnd { Stay, Disable, Destroy }
 
