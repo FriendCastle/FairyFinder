@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.nianticlabs.lightship": {
-      "version": "file:ardk-next-3.0.0.tgz",
+      "version": "file:ardk-upm-3.1.0.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -16,11 +16,11 @@
       }
     },
     "com.nianticlabs.lightship.sharedar": {
-      "version": "file:sharedar-up-3.0.0.tgz",
+      "version": "file:sharedar-upm-3.1.0.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
-        "com.nianticlabs.lightship": "3.0.0-231026145955",
+        "com.nianticlabs.lightship": "3.1.0-231127183852",
         "com.unity.netcode.gameobjects": "1.2.0"
       }
     },
@@ -42,7 +42,7 @@
     },
     "com.unity.collections": {
       "version": "1.2.4",
-      "depth": 3,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.burst": "1.6.6",
@@ -119,6 +119,19 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.multiplayer.tools": {
+      "version": "1.1.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.profiling.core": "1.0.0-pre.1",
+        "com.unity.nuget.newtonsoft-json": "2.0.0",
+        "com.unity.nuget.mono-cecil": "1.10.1",
+        "com.unity.collections": "1.1.0",
+        "com.unity.modules.uielements": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.netcode.gameobjects": {
       "version": "1.6.0",
       "depth": 1,
@@ -131,7 +144,7 @@
     },
     "com.unity.nuget.mono-cecil": {
       "version": "1.11.4",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -145,6 +158,13 @@
     },
     "com.unity.performance.profile-analyzer": {
       "version": "1.2.2",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.profiling.core": {
+      "version": "1.0.2",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
