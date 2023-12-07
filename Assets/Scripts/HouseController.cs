@@ -22,7 +22,6 @@ public class HouseController : MonoBehaviour {
 
     private void Awake() {
         sparkleIndex = UnityEngine.Random.Range(0, OrderedSparkleArea.Count - 1);
-        Debug.Log(sparkleIndex);
     }
 
     void Start() {
@@ -46,10 +45,12 @@ public class HouseController : MonoBehaviour {
 
     IEnumerator RevealFairy() {
         if (fairyObject != null) {
-            //TODO:: Reveal the fairy and make sure it's not a child of this object
+            fairyObject.transform.SetParent(null);
+            fairyObject.SetActive(true);
+            Instantiate(OrderedSparkleArea[sparkleIndex], transform.position, Quaternion.identity, transform);
         }
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(10);
         Destroy(this.gameObject);
 
     }

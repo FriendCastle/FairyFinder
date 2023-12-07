@@ -9,9 +9,9 @@ public class DemoSceneInterface : MonoBehaviour {
     public Button FairyButton;
     public Button InteractButton;
 
-    private Spawner spawner;
-    private HouseController house;
-    private FairyController fairy;
+    [SerializeField] private Spawner spawner;
+    [SerializeField] private HouseController house;
+    [SerializeField] private FairyController fairy;
 
     private void Awake() {
         spawner = FindFirstObjectByType<Spawner>();
@@ -26,12 +26,15 @@ public class DemoSceneInterface : MonoBehaviour {
         FairyButton.interactable = true;
         InteractButton.interactable = true;
         house = FindFirstObjectByType<HouseController>();
+
+        if (fairy != null) {
+            Destroy(fairy.gameObject); 
+        }
     }
 
     public void AddFairy() {
         house.AddFairy();
         FairyButton.interactable = false;
-        fairy = FindFirstObjectByType<FairyController>();
     }
 
     public void Interact() {
@@ -39,5 +42,6 @@ public class DemoSceneInterface : MonoBehaviour {
         SpawnButton.interactable = true;
         FairyButton.interactable = false;
         InteractButton.interactable = false;
+        fairy = FindFirstObjectByType<FairyController>();
     }
 }

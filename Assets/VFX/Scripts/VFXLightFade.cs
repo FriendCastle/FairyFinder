@@ -10,26 +10,26 @@ namespace FriendCastleFX
         public float life = 0.2f;
         public OnEnd onEnd = OnEnd.Destroy;
 
-        private Light light;
+        private Light lit;
         private float initIntensity;
 
         // Use this for initialization
         private void Start()
         {
-            light = GetComponent<Light>();
-            if (light != null)
+            lit = GetComponent<Light>();
+            if (lit != null)
             {
-                initIntensity = light.intensity;
+                initIntensity = lit.intensity;
             }
         }
 
         // Update is called once per frame
         private void Update()
         {
-            if (light != null)
+            if (lit != null)
             {
-                light.intensity -= initIntensity * (Time.deltaTime / life);
-                if (light.intensity <= 0f)
+                lit.intensity -= initIntensity * (Time.deltaTime / life);
+                if (lit.intensity <= 0f)
                 {
                     switch (onEnd)
                     {
@@ -37,10 +37,10 @@ namespace FriendCastleFX
                             // Do nothing
                             break;
                         case OnEnd.Disable:
-                            light.enabled = false;
+                            lit.enabled = false;
                             break;
                         case OnEnd.Destroy:
-                            Destroy(light);
+                            Destroy(lit);
                             break;
                     }
                 }

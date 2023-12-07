@@ -9,4 +9,7 @@ public class FairyController : MonoBehaviour {
         animator = gameObject.GetComponent<Animator>();
     }
 
+    void OnEnable() {
+        animator.SetTrigger("Jump");
+    }
 }
