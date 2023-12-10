@@ -127,8 +127,7 @@ public class SampleSceneTest : MonoBehaviour
 
 	private void SetupRoom(string roomName)
 	{
-		var imageTrackingOptions = ISharedSpaceTrackingOptions.CreateImageTrackingOptions(
-		_targetImage, _targetImageSize);
+		var imageTrackingOptions = ISharedSpaceTrackingOptions.CreateImageTrackingOptions(_targetImage, _targetImageSize);
 
 		//set room name from text box
 		var roomOptions = ISharedSpaceRoomOptions.CreateLightshipRoomOptions(roomName, 32, "FairyFinder");
@@ -168,14 +167,22 @@ public class SampleSceneTest : MonoBehaviour
 	private void OnServerStarted()
 	{
 		Debug.Log("Netcode server ready");
-		connectionStatusText.text = string.Format("CONNECTION STATUS:\nSERVER STARTED");
+		connectionStatusText.text = string.Format("CONNECTION STATUS:\nSERVER STARTED");		
 		clientsConnectedText.text = string.Format("CLIENTS CONNECTED: {0}", NetworkManager.Singleton.ConnectedClients.Count);
 	}
 
 	private void OnClientConnectedCallback(ulong clientId)
 	{
 		Debug.Log($"Client connected: {clientId}");
-		clientsConnectedText.text = string.Format("CLIENTS CONNECTED: {0}", NetworkManager.Singleton.ConnectedClients.Count);
+
+		if (_startAsHost)
+		{
+			clientsConnectedText.text = string.Format("CLIENTS CONNECTED: {0}", NetworkManager.Singleton.ConnectedClients.Count);
+		}
+		else
+		{
+			connectionStatusText.text = string.Format("CONNECTION STATUS:\nCONNECTED");		
+		}
 	}
 
 	// Handle network disconnect
@@ -195,6 +202,5 @@ public class SampleSceneTest : MonoBehaviour
 		connectionStatusText.text = string.Format("CONNECTION STATUS:\nDISCONNECTED");
 		hostButton.gameObject.SetActive(true);
 		joinButton.gameObject.SetActive(true);
-		clientsConnectedText.text = string.Format("CLIENTS CONNECTED: {0}", NetworkManager.Singleton.ConnectedClients.Count);
 	}
 }
