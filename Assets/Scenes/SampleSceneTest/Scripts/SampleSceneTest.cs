@@ -3,6 +3,7 @@ using UnityEngine;
 using Niantic.Lightship.SharedAR.Colocalization;
 using Unity.Netcode;
 using UnityEngine.UI;
+using TMPro;
 public class SampleSceneTest : MonoBehaviour
 {
     [SerializeField]
@@ -40,6 +41,15 @@ public class SampleSceneTest : MonoBehaviour
 
 	[SerializeField]
 	private Button joinButton = null;
+
+	[SerializeField]
+	private TMP_Text connectionStatusText = null;
+
+	[SerializeField]
+	private TMP_Text trackingStatusText = null;
+
+	[SerializeField]
+	private TMP_Text clientsConnectedText = null;
 
     private GameObject reticleInstance;
 
@@ -125,10 +135,10 @@ public class SampleSceneTest : MonoBehaviour
 
 		_sharedSpaceManager.StartSharedSpace(imageTrackingOptions, roomOptions);
 
-		// start as client
-		_startAsHost = false;
 		hostButton.gameObject.SetActive(false);
 		joinButton.gameObject.SetActive(false);
+
+		trackingStatusText.text = string.Format("TRACKING STATUS: Not Tracking");
 	}
 
 	private void OnColocalizationTrackingStateChanged(SharedSpaceManager.SharedSpaceManagerStateChangeEventArgs args)
@@ -136,7 +146,8 @@ public class SampleSceneTest : MonoBehaviour
 		if (args.Tracking)
 		{
 			Debug.Log("Colocalized.");
-			
+			trackingStatusText.text = string.Format("TRACKING STATUS: Colocalized");
+
 			// Start networking
 			if (_startAsHost)
 			{
@@ -149,6 +160,7 @@ public class SampleSceneTest : MonoBehaviour
 		}
 		else
 		{
+			trackingStatusText.text = string.Format("TRACKING STATUS: Not Tracking");
 			Debug.Log($"Image tracking not tracking?");
 		}
 	}
@@ -156,11 +168,14 @@ public class SampleSceneTest : MonoBehaviour
 	private void OnServerStarted()
 	{
 		Debug.Log("Netcode server ready");
+		connectionStatusText.text = string.Format("CONNECTION STATUS:\nSERVER STARTED");
+		clientsConnectedText.text = string.Format("CLIENTS CONNECTED: {0}", NetworkManager.Singleton.ConnectedClients.Count);
 	}
 
 	private void OnClientConnectedCallback(ulong clientId)
 	{
 		Debug.Log($"Client connected: {clientId}");
+		clientsConnectedText.text = string.Format("CLIENTS CONNECTED: {0}", NetworkManager.Singleton.ConnectedClients.Count);
 	}
 
 	// Handle network disconnect
@@ -177,7 +192,9 @@ public class SampleSceneTest : MonoBehaviour
 		}
 
 		Debug.Log($"Client disconnected");
+		connectionStatusText.text = string.Format("CONNECTION STATUS:\nDISCONNECTED");
 		hostButton.gameObject.SetActive(true);
 		joinButton.gameObject.SetActive(true);
+		clientsConnectedText.text = string.Format("CLIENTS CONNECTED: {0}", NetworkManager.Singleton.ConnectedClients.Count);
 	}
 }
