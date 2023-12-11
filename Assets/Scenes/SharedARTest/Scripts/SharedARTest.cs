@@ -37,12 +37,15 @@ public class SharedARTest : MonoBehaviour
 	[SerializeField]
 	private TMP_Text clientsConnectedText = null;
 
+	[SerializeField]
+	private SharedARTestFairyController fairyControllerPrefab;
+
 	private bool _startAsHost = false;
 
 	private const int MAX_SPORES_TO_SPAWN = 10;
 	private const float SPAWN_INTERVAL = 5f;
 	private float currentSpawnTime = 0f;
-	private List<FairyAvatar> fairyAvatars = new List<FairyAvatar>();
+	private List<SharedARTestFairyController> fairyAvatars = new List<SharedARTestFairyController>();
 
 	void Awake()
 	{
@@ -58,6 +61,11 @@ public class SharedARTest : MonoBehaviour
 
 	private void Update()
 	{
+		if (NetworkManager.Singleton == null || NetworkManager.Singleton.IsServer == false)
+		{
+			return;
+		}
+
 		if (fairyAvatars.Count < MAX_SPORES_TO_SPAWN)
 		{
 			if (navMeshManager.LightshipNavMesh != null)
@@ -68,10 +76,17 @@ public class SharedARTest : MonoBehaviour
 					if (foundPosition)
 					{
 						currentSpawnTime = 0f;
+						SharedARTestFairyController fairy = Instantiate(fairyControllerPrefab, randomPos, Quaternion.identity);
+						fairy.NetworkObject.Spawn();
+						fairyAvatars.Add(fairy);
+						Debug.Log(string.Format("Spawned a fairy at {0}", randomPos));
+						currentSpawnTime = 0f;
 					}
 				}
-
-				currentSpawnTime += Time.deltaTime;
+				else
+				{
+					currentSpawnTime += Time.deltaTime;
+				}
 			}
 		}
 	}

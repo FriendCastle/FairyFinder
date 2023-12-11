@@ -11,7 +11,9 @@ GameObject:
   - component: {fileID: 6091767631217654792}
   - component: {fileID: -7420423054837064087}
   - component: {fileID: 5468041873933735125}
-  - component: {fileID: -72421341991423507}
+  - component: {fileID: -4174182248565738932}
+  - component: {fileID: 5952277942039659556}
+  - component: {fileID: 9116998145055907546}
   m_Layer: 0
   m_Name: SharedARTest_Spore
   m_TagString: Untagged
@@ -68,7 +70,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _putInSharedOrigin: 1
---- !u!114 &-72421341991423507
+--- !u!114 &-4174182248565738932
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -77,27 +79,42 @@ MonoBehaviour:
   m_GameObject: {fileID: 670016893779880619}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e87b986183de41a79b36dfdf9e74953, type: 3}
+  m_Script: {fileID: 11500000, guid: a460b65e01e7a4ff488480ebd022bcbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  Interpolate: 1
-  SlerpPosition: 0
+  networkObject: {fileID: -7420423054837064087}
+  lightshipNetworkObject: {fileID: 5468041873933735125}
+  model: {fileID: 3309226902641488799}
+--- !u!114 &5952277942039659556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670016893779880619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa9c6c34ba7214d98a185db26b656d1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkingSpeed: 3
+  jumpDistance: 1
+  jumpPenalty: 2
+  pathFindingBehaviour: 2
+--- !u!114 &9116998145055907546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670016893779880619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4b1b693a878e4a18887acd8a155dfb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _agent: {fileID: 5952277942039659556}
+  _material: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!1001 &3405380821493270709
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -109,6 +126,18 @@ PrefabInstance:
     - target: {fileID: 193350791343668010, guid: b732539cfacdadb4e8a2c3be324d7061, type: 3}
       propertyPath: m_Name
       value: Spore
+      objectReference: {fileID: 0}
+    - target: {fileID: 713041166133895568, guid: b732539cfacdadb4e8a2c3be324d7061, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 713041166133895568, guid: b732539cfacdadb4e8a2c3be324d7061, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 713041166133895568, guid: b732539cfacdadb4e8a2c3be324d7061, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 713041166133895568, guid: b732539cfacdadb4e8a2c3be324d7061, type: 3}
       propertyPath: m_LocalPosition.x
@@ -150,6 +179,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 713041166133895568, guid: b732539cfacdadb4e8a2c3be324d7061, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -158,5 +191,10 @@ PrefabInstance:
 --- !u!4 &2785314711920240933 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 713041166133895568, guid: b732539cfacdadb4e8a2c3be324d7061, type: 3}
+  m_PrefabInstance: {fileID: 3405380821493270709}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3309226902641488799 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 193350791343668010, guid: b732539cfacdadb4e8a2c3be324d7061, type: 3}
   m_PrefabInstance: {fileID: 3405380821493270709}
   m_PrefabAsset: {fileID: 0}
