@@ -173,7 +173,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7771859843121304425, guid: 864298bfd414aa848874d0fad8f2a111, type: 3}
       propertyPath: m_Name
-      value: Spawner
+      value: GameManager
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -212,6 +212,9 @@ MonoBehaviour:
   SpawnButton: {fileID: 2038396334}
   FairyButton: {fileID: 453821159}
   InteractButton: {fileID: 2126578316}
+  spawner: {fileID: 0}
+  house: {fileID: 0}
+  fairy: {fileID: 0}
 --- !u!4 &218440035
 Transform:
   m_ObjectHideFlags: 0

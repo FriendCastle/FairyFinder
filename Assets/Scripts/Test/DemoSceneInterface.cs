@@ -9,19 +9,26 @@ public class DemoSceneInterface : MonoBehaviour {
     public Button FairyButton;
     public Button InteractButton;
 
-    [SerializeField] private Spawner spawner;
+    [SerializeField] private GameManager gm;
     [SerializeField] private HouseController house;
     [SerializeField] private FairyController fairy;
 
     private void Awake() {
-        spawner = FindFirstObjectByType<Spawner>();
+        gm = FindFirstObjectByType<GameManager>();
         SpawnButton.interactable = true;
         FairyButton.interactable = false;
         InteractButton.interactable = false;
+        //TODO:: How many players? Save them to a list
     }
 
+    //TODO:: Add functionality for spawning the "right" amount of houses in the space (with and without fairies)
+
+    //TODO:: When does the game end? When all fairies are discovered? Will we display how many are possible to discover? 
+
+    //TODO:: Add functionality for players taking turns, earning points, etc -- have the fairies follow the player who found them (and display the number somewhere)
+
     public void SpawnHouse() {
-        spawner.SpawnHouse(); 
+        gm.SpawnHouse(); 
         SpawnButton.interactable = false;
         FairyButton.interactable = true;
         InteractButton.interactable = true;
