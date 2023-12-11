@@ -3,7 +3,7 @@
 using Unity.Netcode.Components;
 using UnityEngine;
 
-public class PlayerAvatar: NetworkTransform
+public class PlayerAvatar : NetworkTransform
 {
   [HideInInspector]
   private Transform _arCameraTransform;

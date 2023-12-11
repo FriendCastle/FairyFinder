@@ -873,7 +873,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lightshipNavMeshManager: {fileID: 743424027}
-  _material: {fileID: 2100000, guid: 57181108b8df9564db149da8fe4f544f, type: 2}
+  _material: {fileID: 2100000, guid: 19d2920442dd04fadbfccd4dac1db499, type: 2}
 --- !u!1 &855846014
 GameObject:
   m_ObjectHideFlags: 0
