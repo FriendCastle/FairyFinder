@@ -32,3 +32,8 @@ Our next steps are to unify these experiments to get the base gameplay working i
 - iPhone 15 Pro Max
 	- Nav Mesh Management not working
 	- need to reach out to Niantic about why/if it's known/expected
+
+### Findings
+- From experimenting with nav meshes and utilizing image tracking for the shared AR space, it seems that it might be too difficult to get everyone's devices on the same page.
+	- Plan is for now to use nav meshes only locally to have some per client environment setup/local side AR agents to fill the room.
+	- The only gameobjects that will be synced are the houses that the player chooses during their turn which is the main focus of the game.
