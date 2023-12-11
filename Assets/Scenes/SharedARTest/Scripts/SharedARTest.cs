@@ -4,16 +4,14 @@ using Niantic.Lightship.SharedAR.Colocalization;
 using Unity.Netcode;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 public class SharedARTest : MonoBehaviour
 {
-    [SerializeField]
-    private Camera arCamera = null;
+	[SerializeField]
+	private Camera arCamera = null;
 
-    [SerializeField]
-    private LightshipNavMeshManager navMeshManager = null;
-
-    [SerializeField]
-    private LightshipNavMeshRenderer navMeshRenderer = null;
+	[SerializeField]
+	private LightshipNavMeshManager navMeshManager = null;
 
 	[SerializeField]
 	private SharedSpaceManager _sharedSpaceManager = null;
@@ -41,17 +39,43 @@ public class SharedARTest : MonoBehaviour
 
 	private bool _startAsHost = false;
 
-    void Awake()
-    {
-    }
+	private const int MAX_SPORES_TO_SPAWN = 10;
+	private const float SPAWN_INTERVAL = 5f;
+	private float currentSpawnTime = 0f;
+	private List<FairyAvatar> fairyAvatars = new List<FairyAvatar>();
+
+	void Awake()
+	{
+	}
 
 	private void Start()
 	{
-			_sharedSpaceManager.sharedSpaceManagerStateChanged += OnColocalizationTrackingStateChanged;
-            NetworkManager.Singleton.OnServerStarted += OnServerStarted;
-            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback;
-            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectedCallback;
+		_sharedSpaceManager.sharedSpaceManagerStateChanged += OnColocalizationTrackingStateChanged;
+		NetworkManager.Singleton.OnServerStarted += OnServerStarted;
+		NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback;
+		NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectedCallback;
 	}
+
+	private void Update()
+	{
+		if (fairyAvatars.Count < MAX_SPORES_TO_SPAWN)
+		{
+			if (navMeshManager.LightshipNavMesh != null)
+			{
+				if (currentSpawnTime >= SPAWN_INTERVAL)
+				{
+					bool foundPosition = navMeshManager.LightshipNavMesh.FindRandomPosition(out Vector3 randomPos);
+					if (foundPosition)
+					{
+						currentSpawnTime = 0f;
+					}
+				}
+
+				currentSpawnTime += Time.deltaTime;
+			}
+		}
+	}
+
 	public void StartNewRoom()
 	{
 		SetupRoom("FriendCastle");
@@ -111,8 +135,10 @@ public class SharedARTest : MonoBehaviour
 	{
 		Debug.Log("Netcode server ready");
 		clientsConnectedText.gameObject.SetActive(true);
-		connectionStatusText.text = string.Format("CONNECTION STATUS:\nSERVER STARTED");		
+		connectionStatusText.text = string.Format("CONNECTION STATUS:\nSERVER STARTED");
 		clientsConnectedText.text = string.Format("CLIENTS CONNECTED: {0}", NetworkManager.Singleton.ConnectedClients.Count);
+
+		TurnOffLocalClientAvatar();
 	}
 
 	private void OnClientConnectedCallback(ulong clientId)
@@ -123,22 +149,32 @@ public class SharedARTest : MonoBehaviour
 		{
 			clientsConnectedText.gameObject.SetActive(true);
 			clientsConnectedText.text = string.Format("CLIENTS CONNECTED: {0}", NetworkManager.Singleton.ConnectedClients.Count);
+			TurnOffLocalClientAvatar();
 		}
 		else
 		{
-			connectionStatusText.text = string.Format("CONNECTION STATUS:\nCONNECTED");		
+			connectionStatusText.text = string.Format("CONNECTION STATUS:\nCONNECTED");
 		}
+	}
+
+	private void TurnOffLocalClientAvatar()
+	{
+		if (NetworkManager.Singleton == null)
+		{
+			return;
+		}
+
+		SharedARTestPlayerController playerController = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<SharedARTestPlayerController>();
+		playerController.SetModelVisibility(false);
 	}
 
 	// Handle network disconnect
 	private void OnClientDisconnectedCallback(ulong clientId)
 	{
-		var selfId = NetworkManager.Singleton.LocalClientId;
 		if (NetworkManager.Singleton)
 		{
 			if (NetworkManager.Singleton.IsHost && clientId != NetworkManager.ServerClientId)
 			{
-				clientsConnectedText.text = string.Format("CLIENTS CONNECTED: {0}", NetworkManager.Singleton.ConnectedClients.Count);
 				return;
 			}
 		}

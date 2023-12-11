@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class FairyAvatar : NetworkTransform
 {
-  new void Update()
-  {
-    base.Update();
-  }
+	new void Update()
+	{
+		base.Update();
+	}
 }
