@@ -149,11 +149,11 @@ public class SharedARTest : MonoBehaviour
 		{
 			clientsConnectedText.gameObject.SetActive(true);
 			clientsConnectedText.text = string.Format("CLIENTS CONNECTED: {0}", NetworkManager.Singleton.ConnectedClients.Count);
-			TurnOffLocalClientAvatar();
 		}
 		else
 		{
 			connectionStatusText.text = string.Format("CONNECTION STATUS:\nCONNECTED");
+			TurnOffLocalClientAvatar();
 		}
 	}
 
