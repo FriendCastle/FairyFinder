@@ -471,7 +471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lightshipNavMeshManager: {fileID: 743424027}
-  _material: {fileID: 2100000, guid: 57181108b8df9564db149da8fe4f544f, type: 2}
+  _material: {fileID: 2100000, guid: 19d2920442dd04fadbfccd4dac1db499, type: 2}
 --- !u!1 &855846014
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,14 +541,6 @@ MonoBehaviour:
   reticleDistance: 2
   reticleHeightAboveGround: 0.3
   objectToPlace: {fileID: 193350791343668010, guid: d3702c3a83a4b764e92e3e2cadfdbbd3, type: 3}
-  _sharedSpaceManager: {fileID: 0}
-  _targetImage: {fileID: 2800000, guid: 28a7622980d0045358c6584b037376b5, type: 3}
-  _targetImageSize: 9
-  hostButton: {fileID: 0}
-  joinButton: {fileID: 0}
-  connectionStatusText: {fileID: 0}
-  trackingStatusText: {fileID: 0}
-  clientsConnectedText: {fileID: 0}
 --- !u!4 &1031790804
 Transform:
   m_ObjectHideFlags: 0
