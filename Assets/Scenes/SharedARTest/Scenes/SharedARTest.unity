@@ -728,7 +728,7 @@ Light:
     m_CustomResolution: -1
     m_Strength: 1
     m_Bias: 0.05
-    m_NormalBias: 0.4
+    m_NormalBias: 0
     m_NearPlane: 0.2
     m_CullingMatrixOverride:
       e00: 1
@@ -1075,13 +1075,15 @@ MonoBehaviour:
   navMeshManager: {fileID: 743424027}
   _sharedSpaceManager: {fileID: 2038771190}
   _targetImage: {fileID: 2800000, guid: 28a7622980d0045358c6584b037376b5, type: 3}
-  _targetImageSize: 9
+  _targetImageSize: 0.09
   hostButton: {fileID: 1827846384}
   joinButton: {fileID: 571599346}
   connectionStatusText: {fileID: 1434543806}
   trackingStatusText: {fileID: 440848524}
   clientsConnectedText: {fileID: 1318117450}
   fairyControllerPrefab: {fileID: -4174182248565738932, guid: fdf3b983acaa844969ece115488952f7, type: 3}
+  housePrefab: {fileID: 1931163368419883047, guid: 71e710c7b912140b28599b81ce43c677, type: 3}
+  originPrefab: {fileID: 1626766588467626128, guid: 8812680516ed64eb79ef015e60fe05a7, type: 3}
 --- !u!1 &1318117448
 GameObject:
   m_ObjectHideFlags: 0

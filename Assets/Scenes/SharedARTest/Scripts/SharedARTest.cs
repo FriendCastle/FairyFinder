@@ -5,6 +5,7 @@ using Unity.Netcode;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 public class SharedARTest : MonoBehaviour
 {
 	[SerializeField]
@@ -20,7 +21,7 @@ public class SharedARTest : MonoBehaviour
 	private Texture2D _targetImage = null;
 
 	[SerializeField]
-	private float _targetImageSize = 9;
+	private float _targetImageSize = 0.09f;
 
 	[SerializeField]
 	private Button hostButton = null;
@@ -40,12 +41,22 @@ public class SharedARTest : MonoBehaviour
 	[SerializeField]
 	private SharedARTestFairyController fairyControllerPrefab;
 
+	[SerializeField]
+	private SharedARTestHouseController housePrefab;
+
+	[SerializeField]
+	private GameObject originPrefab;
+
 	private bool _startAsHost = false;
 
 	private const int MAX_SPORES_TO_SPAWN = 5;
 	private const float SPAWN_INTERVAL = 5f;
 	private float currentSpawnTime = 0f;
 	private List<SharedARTestFairyController> fairyAvatars = new List<SharedARTestFairyController>();
+	private SharedARTestHouseController house;
+	private GameObject origin;
+
+	private bool connected = false;
 
 	void Awake()
 	{
@@ -61,6 +72,11 @@ public class SharedARTest : MonoBehaviour
 
 	private void Update()
 	{
+		if (connected == false)
+		{
+			return;
+		}
+
 		if (fairyAvatars.Count < MAX_SPORES_TO_SPAWN)
 		{
 			if (navMeshManager.LightshipNavMesh != null)
@@ -84,6 +100,22 @@ public class SharedARTest : MonoBehaviour
 				}
 			}
 		}
+
+
+	// 	if (_startAsHost && house == null)
+	// 	{
+	// 		if (navMeshManager.LightshipNavMesh != null)
+	// 		{
+	// 			bool foundPosition = navMeshManager.LightshipNavMesh.FindNearestFreePosition(_sharedSpaceManager.SharedArOriginObject.transform.position, 100f, out Vector3 nearestPosition);
+	// 			if (foundPosition)
+	// 			{
+	// 				Vector3 housePosition = new Vector3(0f, nearestPosition.y, 0f);
+	// 				house = Instantiate(housePrefab, housePosition, Quaternion.identity);
+	// 				house.NetworkObject.Spawn();
+	// 				Debug.Log(string.Format("Spawned a house at {0}", housePosition));
+	// 			}
+	// 		}
+	// 	}
 	}
 
 	public void StartNewRoom()
@@ -124,6 +156,8 @@ public class SharedARTest : MonoBehaviour
 			Debug.Log("Colocalized.");
 			trackingStatusText.text = string.Format("TRACKING STATUS: Colocalized");
 
+			origin = Instantiate(originPrefab, _sharedSpaceManager.SharedArOriginObject.transform, false);
+
 			// Start networking
 			if (_startAsHost)
 			{
@@ -147,7 +181,7 @@ public class SharedARTest : MonoBehaviour
 		clientsConnectedText.gameObject.SetActive(true);
 		connectionStatusText.text = string.Format("CONNECTION STATUS:\nSERVER STARTED");
 		clientsConnectedText.text = string.Format("CLIENTS CONNECTED: {0}", NetworkManager.Singleton.ConnectedClients.Count);
-
+		connected = true;
 		TurnOffLocalClientAvatar();
 	}
 
@@ -164,6 +198,7 @@ public class SharedARTest : MonoBehaviour
 		{
 			connectionStatusText.text = string.Format("CONNECTION STATUS:\nCONNECTED");
 			TurnOffLocalClientAvatar();
+			connected = true;
 		}
 	}
 
@@ -193,5 +228,6 @@ public class SharedARTest : MonoBehaviour
 		connectionStatusText.text = string.Format("CONNECTION STATUS:\nDISCONNECTED");
 		hostButton.gameObject.SetActive(true);
 		joinButton.gameObject.SetActive(true);
+		connected = false;
 	}
 }
