@@ -13,9 +13,4 @@ MonoBehaviour:
   m_Name: SharedARTestNetworkPrefabsList
   m_EditorClassIdentifier: 
   IsDefault: 0
-  List:
-  - Override: 0
-    Prefab: {fileID: 670016893779880619, guid: fdf3b983acaa844969ece115488952f7, type: 3}
-    SourcePrefabToOverride: {fileID: 0}
-    SourceHashToOverride: 0
-    OverridingTargetPrefab: {fileID: 0}
+  List: []

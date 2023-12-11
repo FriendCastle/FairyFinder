@@ -42,7 +42,7 @@ public class SharedARTest : MonoBehaviour
 
 	private bool _startAsHost = false;
 
-	private const int MAX_SPORES_TO_SPAWN = 10;
+	private const int MAX_SPORES_TO_SPAWN = 5;
 	private const float SPAWN_INTERVAL = 5f;
 	private float currentSpawnTime = 0f;
 	private List<SharedARTestFairyController> fairyAvatars = new List<SharedARTestFairyController>();
@@ -61,11 +61,6 @@ public class SharedARTest : MonoBehaviour
 
 	private void Update()
 	{
-		if (NetworkManager.Singleton == null || NetworkManager.Singleton.IsServer == false)
-		{
-			return;
-		}
-
 		if (fairyAvatars.Count < MAX_SPORES_TO_SPAWN)
 		{
 			if (navMeshManager.LightshipNavMesh != null)
@@ -77,10 +72,10 @@ public class SharedARTest : MonoBehaviour
 					{
 						currentSpawnTime = 0f;
 						SharedARTestFairyController fairy = Instantiate(fairyControllerPrefab, randomPos, Quaternion.identity);
-						fairy.NetworkObject.Spawn();
+						fairy.Init(navMeshManager);
 						fairyAvatars.Add(fairy);
-						Debug.Log(string.Format("Spawned a fairy at {0}", randomPos));
 						currentSpawnTime = 0f;
+						Debug.Log(string.Format("Spawned a fairy at {0}", randomPos));
 					}
 				}
 				else

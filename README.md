@@ -19,9 +19,9 @@ For this project, we are specifically focused on utilizing Lightship's shared AR
 
 We are currently experimenting in different scenes to get each portion working to understand the basics of getting this setup.
 
-We currently have basic object placement of our "fairies" utilizing the nav mesh management system and a reticle to indicate where the player is attempting to place them.
+We currently have basic object placement of our "fairies" utilizing the nav mesh management system and a reticle to indicate where the player is attempting to place them. (SampleScene)
 
-We also have a scene in which players can choose to host or join a room to see each other's avatars move in sync with their real devices in a shared space.
+We also have a scene in which players can choose to host or join a room to see each other's avatars move in sync with their real devices in a shared space. (SharedARTest)
 
 We separately have started setup for the types of interactions and animations we plan on showing throughout the coarse of the game.
 
