@@ -26,3 +26,9 @@ We also have a scene in which players can choose to host or join a room to see e
 We separately have started setup for the types of interactions and animations we plan on showing throughout the coarse of the game.
 
 Our next steps are to unify these experiments to get the base gameplay working in a scene so we can start playtesting.
+
+
+### Current Issues
+- iPhone 15 Pro Max
+	- Nav Mesh Management not working
+	- need to reach out to Niantic about why/if it's known/expected
