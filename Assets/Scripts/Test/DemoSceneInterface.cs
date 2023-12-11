@@ -52,3 +52,11 @@ public class DemoSceneInterface : MonoBehaviour {
         fairy = FindFirstObjectByType<FairyController>();
     }
 }
+
+public class GameManager : MonoBehaviour
+{
+	public void SpawnHouse()
+	{
+		
+	}
+}
