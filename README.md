@@ -15,7 +15,7 @@ At the end of the game, whoever has the most points will win and receive a fairy
 
 ## Current Development
 
-For this project, we are specifically focused on utilizing Lighthship's shared AR space tech using image tracking colocalization and navigation mesh management.
+For this project, we are specifically focused on utilizing Lightship's shared AR space tech using image tracking colocalization and navigation mesh management.
 
 We are currently experimenting in different scenes to get each portion working to understand the basics of getting this setup.
 
