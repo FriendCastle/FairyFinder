@@ -53,7 +53,7 @@ public class SharedARTest : MonoBehaviour
 	private const float SPAWN_INTERVAL = 5f;
 	private float currentSpawnTime = 0f;
 	private List<SharedARTestFairyController> fairyAvatars = new List<SharedARTestFairyController>();
-	private SharedARTestHouseController house;
+	private List<SharedARTestHouseController> houses = new List<SharedARTestHouseController>();
 	private GameObject origin;
 
 	private bool connected = false;
@@ -102,20 +102,25 @@ public class SharedARTest : MonoBehaviour
 		}
 
 
-	// 	if (_startAsHost && house == null)
-	// 	{
-	// 		if (navMeshManager.LightshipNavMesh != null)
-	// 		{
-	// 			bool foundPosition = navMeshManager.LightshipNavMesh.FindNearestFreePosition(_sharedSpaceManager.SharedArOriginObject.transform.position, 100f, out Vector3 nearestPosition);
-	// 			if (foundPosition)
-	// 			{
-	// 				Vector3 housePosition = new Vector3(0f, nearestPosition.y, 0f);
-	// 				house = Instantiate(housePrefab, housePosition, Quaternion.identity);
-	// 				house.NetworkObject.Spawn();
-	// 				Debug.Log(string.Format("Spawned a house at {0}", housePosition));
-	// 			}
-	// 		}
-	// 	}
+		if (_startAsHost && houses.Count == 0 && Input.GetMouseButtonDown(0))
+		{
+			if (navMeshManager.LightshipNavMesh != null)
+			{
+				Ray ray = new Ray(arCamera.transform.position, arCamera.transform.forward);
+				RaycastHit hit;
+
+				if (Physics.Raycast(ray, out hit, 10f) && navMeshManager.LightshipNavMesh.IsOnNavMesh(hit.point, 0.2f))
+				{
+					for (int i = 0; i < 3; i++)
+					{
+						SharedARTestHouseController house = Instantiate(housePrefab, hit.point + ((i == 1 ? -.5f : .5f) * arCamera.transform.right * i), Quaternion.identity);
+						house.NetworkObject.Spawn();
+						Debug.Log(string.Format("Spawned a house at {0}", house.transform.position));
+						houses.Add(house);
+					}
+				}
+			}
+		}
 	}
 
 	public void StartNewRoom()
