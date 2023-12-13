@@ -371,7 +371,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &743424026
 Transform:
   m_ObjectHideFlags: 0
@@ -913,6 +913,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21ecaa00457a40e4b910432b014ae999, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  navMeshManager: {fileID: 743424027}
+  xrOrigin: {fileID: 2038771187}
+  arSession: {fileID: 1901929324}
   HousePrefab: {fileID: 0}
 --- !u!1 &1901929322
 GameObject:
@@ -931,7 +934,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1901929323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -991,7 +994,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2038771187
 MonoBehaviour:
   m_ObjectHideFlags: 0

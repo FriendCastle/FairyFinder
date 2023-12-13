@@ -175,7 +175,7 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 		private class CreateRoomPanel : Panel
 		{
 			[SerializeField]
-			private RectTransform _playerCountText = null;
+			private TMP_Text _playerCountText = null;
 
 			[SerializeField]
 			private Button _playerCountButtonLeft = null;
@@ -183,12 +183,13 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 			[SerializeField]
 			private Button _playerCountButtonRight = null;
 
-
 			[SerializeField]
 			private Button _startRoomButton = null;
 
 			[SerializeField]
 			private Button _backButton = null;
+
+			private int visualPlayerCount = GameManager.MIN_PLAYER_COUNT;
 
 			public override void Setup(Screen argPanelOwner)
 			{
@@ -196,13 +197,25 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 
 				_startRoomButton.onClick.AddListener(delegate
 				{
-					GameManager.instance.CreateRoom();
+					GameManager.instance.CreateRoom(visualPlayerCount);
 					GameUIManager.instance.TransitionFromTo(ScreenType.Main, ScreenType.Game);
 				});
 
 				_backButton.onClick.AddListener(delegate
 				{
 					panelOwner.TransitionFromTo(PanelType.CreateRoom, PanelType.Main);
+				});
+
+				_playerCountButtonLeft.onClick.AddListener(delegate
+				{
+					visualPlayerCount = Math.Clamp(visualPlayerCount - 1, GameManager.MIN_PLAYER_COUNT, GameManager.MAX_PLAYER_COUNT);
+					_playerCountText.text = visualPlayerCount.ToString();
+				});
+
+				_playerCountButtonRight.onClick.AddListener(delegate
+				{
+					visualPlayerCount = Math.Clamp(visualPlayerCount + 1, GameManager.MIN_PLAYER_COUNT, GameManager.MAX_PLAYER_COUNT);
+					_playerCountText.text = visualPlayerCount.ToString();
 				});
 			}
 		}

@@ -29,8 +29,6 @@ public class GameNetcodeManager : MonoBehaviour
 
 	private bool connected = false;
 
-	private string roomName = null;
-
 	void Awake()
 	{
 		instance = this;
@@ -52,11 +50,11 @@ public class GameNetcodeManager : MonoBehaviour
 		}
 	}
 
-	public string StartNewRoom()
+	public string StartNewRoom(int argPlayerCount)
 	{
 		int code = Random.Range(0, 10000);
 		string name = code.ToString("D4");
-		SetupRoom(name);
+		SetupRoom(name, argPlayerCount);
 
 		// start as host
 		_startAsHost = true;
@@ -72,12 +70,12 @@ public class GameNetcodeManager : MonoBehaviour
 		_startAsHost = false;
 	}
 
-	private void SetupRoom(string roomName)
+	private void SetupRoom(string roomName, int argPlayerCount = 10)
 	{
 		var imageTrackingOptions = ISharedSpaceTrackingOptions.CreateImageTrackingOptions(_targetImage, _targetImageSize);
 
 		//set room name from text box
-		var roomOptions = ISharedSpaceRoomOptions.CreateLightshipRoomOptions(roomName, 32, "FairyFinder");
+		var roomOptions = ISharedSpaceRoomOptions.CreateLightshipRoomOptions(roomName, argPlayerCount, "FairyFinder");
 
 		_sharedSpaceManager.StartSharedSpace(imageTrackingOptions, roomOptions);
 	}

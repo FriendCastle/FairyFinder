@@ -370,7 +370,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.49803925, g: 0.5647059, b: 0.5529412, a: 0}
+  m_Color: {r: 0.23137257, g: 0.36862746, b: 0.34117648, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3698,7 +3698,7 @@ MonoBehaviour:
       _joinRoomButton: {fileID: 4789729958334631858}
     _createRoomPanel:
       _panel: {fileID: 6735496282820398025}
-      _playerCountText: {fileID: 1260582900110940555}
+      _playerCountText: {fileID: 8765927380074634556}
       _playerCountButtonLeft: {fileID: 5128544737050656805}
       _playerCountButtonRight: {fileID: 6459567707021592975}
       _startRoomButton: {fileID: 7517988853350617939}
