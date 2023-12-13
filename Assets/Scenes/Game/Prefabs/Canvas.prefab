@@ -1566,6 +1566,41 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!1 &3172675899193952491
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8332538802542377082}
+  m_Layer: 5
+  m_Name: SafeAreaRect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8332538802542377082
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3172675899193952491}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7795429382706139359}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: -75}
+  m_SizeDelta: {x: 0, y: -150}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3319876413882859617
 GameObject:
   m_ObjectHideFlags: 0
@@ -3517,9 +3552,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 770c0537d4b324faeb748d4ff756cfe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  safeAreaRect: {fileID: 6731929982684211640}
   _mainMenuScreen:
     _screen: {fileID: 3959884210024642438}
+    safeAreaRect: {fileID: 6731929982684211640}
     _mainPanel:
       _panel: {fileID: 2574272572921743111}
       _createRoomButton: {fileID: 3751454889321850674}
@@ -3538,9 +3573,7 @@ MonoBehaviour:
       _backButton: {fileID: 1336307822503014166}
   _gameScreen:
     _screen: {fileID: 8138269778692276107}
-    _gameScreenConnectionStatusText: {fileID: 0}
-    _gameScreenTrackingStatusText: {fileID: 0}
-    _clientsConnectedTest: {fileID: 0}
+    safeAreaRect: {fileID: 8332538802542377082}
 --- !u!1 &7551065990743495001
 GameObject:
   m_ObjectHideFlags: 0
@@ -3972,7 +4005,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 8332538802542377082}
   m_Father: {fileID: 6377398757727715446}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

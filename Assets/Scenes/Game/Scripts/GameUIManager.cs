@@ -9,8 +9,6 @@ public class GameUIManager : MonoBehaviour
 	public static GameUIManager gameUIManager { get; private set; }
 
 	[Header("UI Hookups")]
-	[SerializeField]
-	private RectTransform safeAreaRect = null;
 
 	[SerializeField]
 	private MainMenuScreen _mainMenuScreen = null;
@@ -53,6 +51,9 @@ public class GameUIManager : MonoBehaviour
 	{
 		[SerializeField]
 		protected CanvasGroup _screen = null;
+
+		[SerializeField]
+		private RectTransform safeAreaRect = null;
 
 		public virtual void Setup()
 		{
