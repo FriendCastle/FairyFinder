@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public interface ITransitioner
 {
-	public void TransitionFromTo(int argFromIndex, int argToIndex);
+	public void TransitionTo(int argToIndex);
 }
 
 public class GameUIManager : MonoBehaviour, ITransitioner
@@ -29,6 +29,8 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 		Game
 	}
 
+	private int currentScreen;
+
 	private void Awake()
 	{
 		instance = this;
@@ -44,17 +46,24 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 		}
 	}
 
-	public void TransitionFromTo(int argFromIndex, int argToIndex)
+	public void TransitionTo(int argToIndex)
 	{
-		Debug.LogFormat("[UIManager] Transitioning from {0} screen to {1} screen", (ScreenType)argFromIndex, (ScreenType)argToIndex);
+		Debug.LogFormat("[UIManager] Transitioning from {0} screen to {1} screen", (ScreenType)currentScreen, (ScreenType)argToIndex);
 
-		screens[argFromIndex].Hide();
+		screens[currentScreen].Hide();
 		screens[argToIndex].Show();
+
+		currentScreen = argToIndex;
 	}
 
 	public void UpdateRoomCode()
 	{
 		_gameScreen.UpdateRoomCode();
+	}
+
+	public void TransitionToGamePanel()
+	{
+		_gameScreen.TransitionTo(GameScreen.PanelType.Game);
 	}
 
 	#region UI Hookup Classes
@@ -91,9 +100,29 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 		[SerializeField]
 		private RectTransform safeAreaRect = null;
 
-		public abstract void Setup();
+		protected Panel[] panels;
 
-		public abstract void TransitionFromTo(int argFromIndex, int argToIndex);
+		protected int currentPanel;
+
+		protected abstract void InitializePanels();
+
+		public virtual void Setup()
+		{
+			InitializePanels();
+
+			foreach (var panel in panels)
+			{
+				panel.Setup(this);
+			}
+		}
+
+		public virtual void TransitionTo(int argToIndex)
+		{
+			panels[currentPanel].Hide();
+			panels[argToIndex].Show();
+
+			currentPanel = argToIndex;
+		}
 
 		public virtual void Show()
 		{
@@ -126,24 +155,16 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 		[SerializeField]
 		private JoinRoomPanel _joinRoomPanel = null;
 
-		private Panel[] panels;
-
-		public override void Setup()
+		protected override void InitializePanels()
 		{
 			panels = new Panel[]{ _mainPanel, _createRoomPanel, _joinRoomPanel };
-
-			foreach (var panel in panels)
-			{
-				panel.Setup(this);
-			}
 		}
 
-		public override void TransitionFromTo(int argFromIndex, int argToIndex)
+		public override void TransitionTo(int argToIndex)
 		{
-			Debug.LogFormat("[UIManager] Transitioning Main Menu Screen from {0} to {1}", (PanelType)argFromIndex, (PanelType)argToIndex);
+			Debug.LogFormat("[UIManager] Transitioning Main Menu Screen from {0} to {1}", (PanelType)currentPanel, (PanelType)argToIndex);
 
-			panels[argFromIndex].Hide();
-			panels[argToIndex].Show();
+			base.TransitionTo(argToIndex);
 		}
 
 		[Serializable]
@@ -161,12 +182,12 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 
 				_createRoomButton.onClick.AddListener(delegate
 				{
-					panelOwner.TransitionFromTo(PanelType.Main, PanelType.CreateRoom);
+					panelOwner.TransitionTo(PanelType.CreateRoom);
 				});
 
 				_joinRoomButton.onClick.AddListener(delegate
 				{
-					panelOwner.TransitionFromTo(PanelType.Main, PanelType.JoinRoom);
+					panelOwner.TransitionTo(PanelType.JoinRoom);
 				});
 			}
 		}
@@ -198,12 +219,12 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 				_startRoomButton.onClick.AddListener(delegate
 				{
 					GameManager.instance.CreateRoom(visualPlayerCount);
-					GameUIManager.instance.TransitionFromTo(ScreenType.Main, ScreenType.Game);
+					GameUIManager.instance.TransitionTo(ScreenType.Game);
 				});
 
 				_backButton.onClick.AddListener(delegate
 				{
-					panelOwner.TransitionFromTo(PanelType.CreateRoom, PanelType.Main);
+					panelOwner.TransitionTo(PanelType.Main);
 				});
 
 				_playerCountButtonLeft.onClick.AddListener(delegate
@@ -226,7 +247,6 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 			[SerializeField]
 			private TMP_InputField _roomNumberInputField = null;
 
-
 			[SerializeField]
 			private Button _joinRoomButton = null;
 
@@ -240,35 +260,69 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 				_joinRoomButton.onClick.AddListener(delegate
 				{
 					GameManager.instance.JoinRoom(_roomNumberInputField.text);
-					GameUIManager.instance.TransitionFromTo(ScreenType.Main, ScreenType.Game);
+					GameUIManager.instance.TransitionTo(ScreenType.Game);
 				});
 
 				_backButton.onClick.AddListener(delegate
 				{
-					panelOwner.TransitionFromTo(PanelType.JoinRoom, PanelType.Main);
+					panelOwner.TransitionTo(PanelType.Main);
 				});
 			}
 		}
 	}
 
 	[Serializable]
-	private class GameScreen : Screen
+	private class GameScreen : Screen, ITransitioner
 	{
-		
+		public enum PanelType
+		{
+			Scan,
+			Game
+		}
+
 		[SerializeField]
 		private TMP_Text _roomCodeText;
 
-		public override void Setup()
+		[SerializeField]
+		private ScanImagePanel _scanImagePanel;
+
+		[SerializeField]
+		private ScanImagePanel _gamePanel;
+
+		protected override void InitializePanels()
 		{
+			panels = new Panel[]{ _scanImagePanel, _gamePanel };
 		}
 
-		public override void TransitionFromTo(int argFromIndex, int argToIndex)
+		public override void TransitionTo(int argToIndex)
 		{
+			Debug.LogFormat("[UIManager] Transitioning Game Screen from {0} to {1}", (PanelType)currentPanel, (PanelType)argToIndex);
+
+			base.TransitionTo(argToIndex);
 		}
 
 		public void UpdateRoomCode()
 		{
 			_roomCodeText.text = string.Format("Room Code:\n{0}", GameManager.instance.roomName);
+		}
+
+		[Serializable]
+		private class ScanImagePanel : Panel
+		{
+			public override void Setup(Screen argPanelOwner)
+			{
+				base.Setup(argPanelOwner);
+			}
+		}
+
+
+		[Serializable]
+		private class GamePanel : Panel
+		{
+			public override void Setup(Screen argPanelOwner)
+			{
+				base.Setup(argPanelOwner);
+			}
 		}
 	}
 #endregion // UI Hookup Classes

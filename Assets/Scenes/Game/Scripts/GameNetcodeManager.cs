@@ -82,7 +82,7 @@ public class GameNetcodeManager : MonoBehaviour
 
 	private void OnColocalizationTrackingStateChanged(SharedSpaceManager.SharedSpaceManagerStateChangeEventArgs args)
 	{
-		if (args.Tracking)
+		if (args.Tracking && connected == false)
 		{
 			Debug.Log("Colocalized.");
 
@@ -95,6 +95,8 @@ public class GameNetcodeManager : MonoBehaviour
 			{
 				NetworkManager.Singleton.StartClient();
 			}
+
+			GameManager.instance.OnConnectionStarted();
 		}
 		else
 		{

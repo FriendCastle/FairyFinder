@@ -62,4 +62,9 @@ public class GameManager : MonoBehaviour
 	{
 		Instantiate(HousePrefab, location, Quaternion.identity);
 	}
+
+	public void OnConnectionStarted()
+	{
+		
+	}
 }
