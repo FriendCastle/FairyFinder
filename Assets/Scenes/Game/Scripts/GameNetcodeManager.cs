@@ -8,6 +8,8 @@ using System.Collections.Generic;
 
 public class GameNetcodeManager : MonoBehaviour
 {
+	public static GameNetcodeManager instance { get; private set; }
+
 	[SerializeField]
 	private Camera arCamera = null;
 
@@ -31,6 +33,7 @@ public class GameNetcodeManager : MonoBehaviour
 
 	void Awake()
 	{
+		instance = this;
 	}
 
 	private void Start()
