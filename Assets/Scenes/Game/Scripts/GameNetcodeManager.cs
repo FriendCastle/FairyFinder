@@ -8,6 +8,8 @@ using System.Collections.Generic;
 
 public class GameNetcodeManager : MonoBehaviour
 {
+	public static GameNetcodeManager instance { get; private set; }
+
 	[SerializeField]
 	private Camera arCamera = null;
 
@@ -31,6 +33,7 @@ public class GameNetcodeManager : MonoBehaviour
 
 	void Awake()
 	{
+		instance = this;
 	}
 
 	private void Start()
@@ -49,7 +52,7 @@ public class GameNetcodeManager : MonoBehaviour
 		}
 	}
 
-	public void StartNewRoom()
+	public string StartNewRoom()
 	{
 		int code = Random.Range(0, 10000);
 		string name = code.ToString("D4");
@@ -57,6 +60,8 @@ public class GameNetcodeManager : MonoBehaviour
 
 		// start as host
 		_startAsHost = true;
+
+		return name;
 	}
 
 	public void Join(string argRoomName)

@@ -4,9 +4,14 @@ using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class GameUIManager : MonoBehaviour
+public interface ITransitioner
 {
-	public static GameUIManager gameUIManager { get; private set; }
+	public void TransitionFromTo(int argFromIndex, int argToIndex);
+}
+
+public class GameUIManager : MonoBehaviour, ITransitioner
+{
+	public static GameUIManager instance { get; private set; }
 
 	[Header("UI Hookups")]
 
@@ -18,9 +23,15 @@ public class GameUIManager : MonoBehaviour
 
 	private Screen[] screens;
 
+	public enum ScreenType
+	{
+		Main,
+		Game
+	}
+
 	private void Awake()
 	{
-		gameUIManager = this;
+		instance = this;
 
 		screens = new Screen[]{ _mainMenuScreen, _gameScreen};
 	}
@@ -33,21 +44,41 @@ public class GameUIManager : MonoBehaviour
 		}
 	}
 
+	public void TransitionFromTo(int argFromIndex, int argToIndex)
+	{
+		Debug.LogFormat("[UIManager] Transitioning from {0} screen to {1} screen", (ScreenType)argFromIndex, (ScreenType)argToIndex);
+
+		screens[argFromIndex].Hide();
+		screens[argToIndex].Show();
+	}
+
 #region UI Hookup Classes
 
 	[Serializable]
-	private class Panel
+	public abstract class Panel
 	{
 		[SerializeField]
 		protected CanvasGroup _panel = null;
 
-		public virtual void Setup()
+		protected Screen panelOwner;
+
+		public virtual void Setup(Screen argPanelOwner)
 		{
+			panelOwner = argPanelOwner;
+		}
+
+		public virtual void Show()
+		{
+			_panel.gameObject.SetActive(true);
+		}
+		public virtual void Hide()
+		{
+			_panel.gameObject.SetActive(false);
 		}
 	}
 
 	[Serializable]
-	private class Screen
+	public abstract class Screen : ITransitioner
 	{
 		[SerializeField]
 		protected CanvasGroup _screen = null;
@@ -55,14 +86,31 @@ public class GameUIManager : MonoBehaviour
 		[SerializeField]
 		private RectTransform safeAreaRect = null;
 
-		public virtual void Setup()
+		public abstract void Setup();
+
+		public abstract void TransitionFromTo(int argFromIndex, int argToIndex);
+
+		public virtual void Show()
 		{
+			_screen.gameObject.SetActive(true);
+		}
+
+		public virtual void Hide()
+		{
+			_screen.gameObject.SetActive(false);
 		}
 	}
 
 	[Serializable]
 	private class MainMenuScreen : Screen
 	{
+		public enum PanelType
+		{
+			Main,
+			CreateRoom,
+			JoinRoom
+		}
+
 		[SerializeField]
 		private MainPanel _mainPanel = null;
 
@@ -77,14 +125,20 @@ public class GameUIManager : MonoBehaviour
 
 		public override void Setup()
 		{
-			base.Setup();
-
 			panels = new Panel[]{ _mainPanel, _createRoomPanel, _joinRoomPanel };
 
 			foreach (var panel in panels)
 			{
-				panel.Setup();
+				panel.Setup(this);
 			}
+		}
+
+		public override void TransitionFromTo(int argFromIndex, int argToIndex)
+		{
+			Debug.LogFormat("[UIManager] Transitioning Main Menu Screen from {0} to {1}", (PanelType)argFromIndex, (PanelType)argToIndex);
+
+			panels[argFromIndex].Hide();
+			panels[argToIndex].Show();
 		}
 
 		[Serializable]
@@ -96,18 +150,18 @@ public class GameUIManager : MonoBehaviour
 			[SerializeField]
 			private Button _joinRoomButton = null;
 
-			public override void Setup()
+			public override void Setup(Screen argPanelOwner)
 			{
-				base.Setup();
+				base.Setup(argPanelOwner);
 
 				_createRoomButton.onClick.AddListener(delegate
 				{
-					
+					panelOwner.TransitionFromTo(PanelType.Main, PanelType.CreateRoom);
 				});
 
 				_joinRoomButton.onClick.AddListener(delegate
 				{
-					
+					panelOwner.TransitionFromTo(PanelType.Main, PanelType.JoinRoom);
 				});
 			}
 		}
@@ -130,6 +184,22 @@ public class GameUIManager : MonoBehaviour
 
 			[SerializeField]
 			private Button _backButton = null;
+
+			public override void Setup(Screen argPanelOwner)
+			{
+				base.Setup(argPanelOwner);
+
+				_startRoomButton.onClick.AddListener(delegate
+				{
+					GameManager.instance.CreateRoom();
+					GameUIManager.instance.TransitionFromTo(ScreenType.Main, ScreenType.Game);
+				});
+
+				_backButton.onClick.AddListener(delegate
+				{
+					panelOwner.TransitionFromTo(PanelType.CreateRoom, PanelType.Main);
+				});
+			}
 		}
 
 		[Serializable]
@@ -144,13 +214,35 @@ public class GameUIManager : MonoBehaviour
 
 			[SerializeField]
 			private Button _backButton = null;
+
+			public override void Setup(Screen argPanelOwner)
+			{
+				base.Setup(argPanelOwner);
+
+				_joinRoomButton.onClick.AddListener(delegate
+				{
+					GameManager.instance.JoinRoom(_roomNumberInputField.text);
+					GameUIManager.instance.TransitionFromTo(ScreenType.Main, ScreenType.Game);
+				});
+
+				_backButton.onClick.AddListener(delegate
+				{
+					panelOwner.TransitionFromTo(PanelType.JoinRoom, PanelType.Main);
+				});
+			}
 		}
 	}
 
 	[Serializable]
 	private class GameScreen : Screen
 	{
-	}
+		public override void Setup()
+		{
+		}
 
+		public override void TransitionFromTo(int argFromIndex, int argToIndex)
+		{
+		}
+	}
 #endregion // UI Hookup Classes
 }

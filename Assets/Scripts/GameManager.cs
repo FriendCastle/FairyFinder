@@ -1,19 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private GameObject HousePrefab;
+	[SerializeField] private GameObject HousePrefab;
+	public static GameManager instance { get; private set; }
 
-    //TODO:: Rules for where to spawn the houses within the space based on how many players there are
+	private void Awake()
+	{
+		instance = this;
+	}
+	public void CreateRoom()
+	{
+	}
 
-    public void SpawnHouse() {
-        SpawnHouse(new Vector3(0,0,0));
-    }
+	public void JoinRoom(string argRoomNumber)
+	{
+	}
 
-    public void SpawnHouse(Vector3 location) {
-        Instantiate(HousePrefab, location, Quaternion.identity);
-    }
+	public void SpawnHouse()
+	{
+		SpawnHouse(new Vector3(0, 0, 0));
+	}
 
+	public void SpawnHouse(Vector3 location)
+	{
+		Instantiate(HousePrefab, location, Quaternion.identity);
+	}
 }
