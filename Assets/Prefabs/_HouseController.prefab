@@ -77,4 +77,8 @@ MonoBehaviour:
   - {fileID: 1714716063501506, guid: ea6fb368ff0ea2e409d54725029e8021, type: 3}
   - {fileID: 1359934594507606, guid: e87d77b2ce40fbb4cb11a13a0ec604cd, type: 3}
   - {fileID: 1438902432858508, guid: 70d6dfe08ec8a1447b4822e95e56918e, type: 3}
+  SoundAppear: {fileID: 8300000, guid: 694ab17748f3d84439a5d8a41a1d8a8d, type: 3}
+  SoundDisappearList:
+  - {fileID: 8300000, guid: 8e5f5a200c7656a4e8cb4819c3553324, type: 3}
+  - {fileID: 8300000, guid: b666ebcd3c7535449abb116b0bc5f5ef, type: 3}
   SparkleOffset: {x: 0, y: 0.75, z: 0}

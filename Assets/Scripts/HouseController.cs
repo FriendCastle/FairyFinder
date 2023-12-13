@@ -12,29 +12,39 @@ public class HouseController : MonoBehaviour {
     [SerializeField] private List<GameObject> OrderedSparkleArea;
     [SerializeField] private List<GameObject> OrderedSparkleExplosion;
 
+    [SerializeField] private AudioClip SoundAppear; 
+    [SerializeField] private List<AudioClip> SoundDisappearList;
+
     [SerializeField] private Vector3 SparkleOffset;
 
     private bool containsFairy;
     private GameObject houseObject;
     private GameObject fairyObject;
+    private AudioSource audioSource;
     private Animator animator;
-    private int sparkleIndex;
+    private int orderIndex;
 
     private void Awake() {
-        sparkleIndex = UnityEngine.Random.Range(0, OrderedSparkleArea.Count - 1);
+        orderIndex = UnityEngine.Random.Range(0, OrderedSparkleArea.Count - 1);
     }
 
     void Start() {
         int random = UnityEngine.Random.Range(0, PossibleHouses.Count - 1);
         houseObject = Instantiate(PossibleHouses[random], transform.position, Quaternion.identity, transform);
-        Instantiate(OrderedSparkleArea[sparkleIndex], transform.position + SparkleOffset, Quaternion.identity, transform);
-        animator = houseObject.GetComponent<Animator>();
+        audioSource = houseObject.GetComponent<AudioSource>();
+        Instantiate(OrderedSparkleArea[orderIndex], transform.position + SparkleOffset, Quaternion.identity, transform);
+        animator = houseObject.GetComponent<Animator>(); 
+        audioSource.clip = SoundAppear;
+        audioSource.Play();
     }
 
     public void Interact() {
-        Instantiate(OrderedSparkleExplosion[sparkleIndex], transform.position + SparkleOffset, Quaternion.identity, transform);
+        Instantiate(OrderedSparkleExplosion[orderIndex], transform.position + SparkleOffset, Quaternion.identity, transform);
         animator.SetTrigger("Disappear");
         StartCoroutine(RevealFairy());
+        int random = UnityEngine.Random.Range(0, SoundDisappearList.Count - 1);
+        audioSource.clip = SoundDisappearList[random];
+        audioSource.Play();
     }
 
     public void AddFairy() {
@@ -47,7 +57,7 @@ public class HouseController : MonoBehaviour {
         if (fairyObject != null) {
             fairyObject.transform.SetParent(null);
             fairyObject.SetActive(true);
-            Instantiate(OrderedSparkleArea[sparkleIndex], transform.position, Quaternion.identity, transform);
+            Instantiate(OrderedSparkleArea[orderIndex], transform.position, Quaternion.identity, transform);
         }
 
         yield return new WaitForSeconds(10);
