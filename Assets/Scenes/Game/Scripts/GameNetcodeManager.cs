@@ -52,7 +52,7 @@ public class GameNetcodeManager : MonoBehaviour
 		}
 	}
 
-	public void StartNewRoom()
+	public string StartNewRoom()
 	{
 		int code = Random.Range(0, 10000);
 		string name = code.ToString("D4");
@@ -60,6 +60,8 @@ public class GameNetcodeManager : MonoBehaviour
 
 		// start as host
 		_startAsHost = true;
+
+		return name;
 	}
 
 	public void Join(string argRoomName)

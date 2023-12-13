@@ -4,7 +4,12 @@ using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class GameUIManager : MonoBehaviour
+public interface ITransitioner
+{
+	public void TransitionFromTo(int argFromIndex, int argToIndex);
+}
+
+public class GameUIManager : MonoBehaviour, ITransitioner
 {
 	public static GameUIManager instance { get; private set; }
 
@@ -39,10 +44,18 @@ public class GameUIManager : MonoBehaviour
 		}
 	}
 
+	public void TransitionFromTo(int argFromIndex, int argToIndex)
+	{
+		Debug.LogFormat("[UIManager] Transitioning from {0} screen to {1} screen", (ScreenType)argFromIndex, (ScreenType)argToIndex);
+
+		screens[argFromIndex].Hide();
+		screens[argToIndex].Show();
+	}
+
 #region UI Hookup Classes
 
 	[Serializable]
-	private abstract class Panel
+	public abstract class Panel
 	{
 		[SerializeField]
 		protected CanvasGroup _panel = null;
@@ -65,7 +78,7 @@ public class GameUIManager : MonoBehaviour
 	}
 
 	[Serializable]
-	private abstract class Screen
+	public abstract class Screen : ITransitioner
 	{
 		[SerializeField]
 		protected CanvasGroup _screen = null;
@@ -75,12 +88,17 @@ public class GameUIManager : MonoBehaviour
 
 		public abstract void Setup();
 
-		public virtual void TransitionFromTo<T>(T argFromIndex, T argToIndex) where T : Enum
+		public abstract void TransitionFromTo(int argFromIndex, int argToIndex);
+
+		public virtual void Show()
 		{
-			TransitionFromTo(Convert.ToInt32(argFromIndex), Convert.ToInt32(argToIndex));
+			_screen.gameObject.SetActive(true);
 		}
 
-		public abstract void TransitionFromTo(int argFromIndex, int argToIndex);
+		public virtual void Hide()
+		{
+			_screen.gameObject.SetActive(false);
+		}
 	}
 
 	[Serializable]
@@ -132,8 +150,6 @@ public class GameUIManager : MonoBehaviour
 			[SerializeField]
 			private Button _joinRoomButton = null;
 
-
-
 			public override void Setup(Screen argPanelOwner)
 			{
 				base.Setup(argPanelOwner);
@@ -175,7 +191,8 @@ public class GameUIManager : MonoBehaviour
 
 				_startRoomButton.onClick.AddListener(delegate
 				{
-					GameNetcodeManager.instance.StartNewRoom();
+					GameManager.instance.CreateRoom();
+					GameUIManager.instance.TransitionFromTo(ScreenType.Main, ScreenType.Game);
 				});
 
 				_backButton.onClick.AddListener(delegate
@@ -204,7 +221,8 @@ public class GameUIManager : MonoBehaviour
 
 				_joinRoomButton.onClick.AddListener(delegate
 				{
-					GameNetcodeManager.instance.Join(_roomNumberInputField.text);
+					GameManager.instance.JoinRoom(_roomNumberInputField.text);
+					GameUIManager.instance.TransitionFromTo(ScreenType.Main, ScreenType.Game);
 				});
 
 				_backButton.onClick.AddListener(delegate
