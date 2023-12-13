@@ -52,7 +52,12 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 		screens[argToIndex].Show();
 	}
 
-#region UI Hookup Classes
+	public void UpdateRoomCode()
+	{
+		_gameScreen.UpdateRoomCode();
+	}
+
+	#region UI Hookup Classes
 
 	[Serializable]
 	public abstract class Panel
@@ -236,12 +241,21 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 	[Serializable]
 	private class GameScreen : Screen
 	{
+		
+		[SerializeField]
+		private TMP_Text _roomCodeText;
+
 		public override void Setup()
 		{
 		}
 
 		public override void TransitionFromTo(int argFromIndex, int argToIndex)
 		{
+		}
+
+		public void UpdateRoomCode()
+		{
+			_roomCodeText.text = string.Format("Room Code:\n{0}", GameManager.instance.roomName);
 		}
 	}
 #endregion // UI Hookup Classes

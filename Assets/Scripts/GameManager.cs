@@ -8,16 +8,23 @@ public class GameManager : MonoBehaviour
 	[SerializeField] private GameObject HousePrefab;
 	public static GameManager instance { get; private set; }
 
+	public string roomName { get; private set; }
+
 	private void Awake()
 	{
 		instance = this;
 	}
 	public void CreateRoom()
 	{
+		roomName = GameNetcodeManager.instance.StartNewRoom();
+		GameUIManager.instance.UpdateRoomCode();
 	}
 
-	public void JoinRoom(string argRoomNumber)
+	public void JoinRoom(string argRoomName)
 	{
+		roomName = argRoomName;
+		GameNetcodeManager.instance.Join(roomName);
+		GameUIManager.instance.UpdateRoomCode();
 	}
 
 	public void SpawnHouse()
