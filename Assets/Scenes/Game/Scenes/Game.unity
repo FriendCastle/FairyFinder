@@ -931,7 +931,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1901929323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1048,18 +1048,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3822394719155164009, guid: af759c96808944794b0fa4f49064835d, type: 3}
-      propertyPath: m_fontSize
-      value: 39.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 3822394719155164009, guid: af759c96808944794b0fa4f49064835d, type: 3}
-      propertyPath: m_fontStyle
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3822394719155164009, guid: af759c96808944794b0fa4f49064835d, type: 3}
-      propertyPath: m_HorizontalAlignment
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6377398757727715446, guid: af759c96808944794b0fa4f49064835d, type: 3}
       propertyPath: m_Pivot.x
       value: 0
