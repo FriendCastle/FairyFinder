@@ -65,6 +65,6 @@ public class GameManager : MonoBehaviour
 
 	public void OnConnectionStarted()
 	{
-		
+		GameUIManager.instance.TransitionToGamePanel();
 	}
 }
