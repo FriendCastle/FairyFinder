@@ -222,7 +222,7 @@ public class GameManager : NetworkBehaviour
 			inputEnabled = playerTurn.Value == playerId;
 			Debug.LogFormat("Player input enabled:{0}, Turn: {1}", inputEnabled, playerTurn.Value);
 
-			if (GameNetcodeManager.instance.IsServer)
+			if (GameNetcodeManager.instance.IsServer && startingPositionChosen)
 			{
 				SpawnHouses();
 			}
