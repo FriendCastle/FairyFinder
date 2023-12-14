@@ -212,7 +212,7 @@ MonoBehaviour:
   SpawnButton: {fileID: 2038396334}
   FairyButton: {fileID: 453821159}
   InteractButton: {fileID: 2126578316}
-  spawner: {fileID: 0}
+  gm: {fileID: 0}
   house: {fileID: 0}
   fairy: {fileID: 0}
 --- !u!4 &218440035
