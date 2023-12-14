@@ -26,6 +26,10 @@ public class HouseController : NetworkBehaviour
     private Animator animator;
     private int orderIndex;
 
+	public int houseIndex {get; private set;}
+
+	public const float MAX_REVEAL_ANIM_TIME = 3f;
+
     private void Awake() {
         orderIndex = UnityEngine.Random.Range(0, OrderedSparkleArea.Count - 1);
     }
@@ -40,6 +44,11 @@ public class HouseController : NetworkBehaviour
         audioSource.Play();
     }
 
+	public void AssignHouseIndex(int argHouseIndex)
+	{
+		houseIndex = argHouseIndex;
+	}
+
     public void Interact() {
         Instantiate(OrderedSparkleExplosion[orderIndex], transform.position + SparkleOffset, Quaternion.identity, transform);
         animator.SetTrigger("Disappear");
@@ -47,9 +56,13 @@ public class HouseController : NetworkBehaviour
 		{
 			StartCoroutine(RevealFairy());
 		}
-        int random = UnityEngine.Random.Range(0, SoundDisappearList.Count - 1);
-        audioSource.clip = SoundDisappearList[random];
-        audioSource.Play();
+		else
+		{
+			int random = UnityEngine.Random.Range(0, SoundDisappearList.Count - 1);
+			audioSource.clip = SoundDisappearList[random];
+			audioSource.Play();
+			StartCoroutine(DelayedDestroy());
+		}
     }
 
     public void AddFairy() {
@@ -65,8 +78,25 @@ public class HouseController : NetworkBehaviour
             Instantiate(OrderedSparkleArea[orderIndex], transform.position, Quaternion.identity, transform);
         }
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(MAX_REVEAL_ANIM_TIME);
         Destroy(this.gameObject);
 
     }
+
+	private IEnumerator DelayedDestroy()
+	{
+		yield return new WaitForSeconds(MAX_REVEAL_ANIM_TIME);
+		Destroy(gameObject);
+	}
+
+	public void SetFairyEnabled(bool argEnabled)
+	{
+		containsFairy = argEnabled;
+	}
+
+	[ClientRpc]
+	public void TriggerHouseInteractionClientRpc()
+	{
+		Interact();
+	}
 }
