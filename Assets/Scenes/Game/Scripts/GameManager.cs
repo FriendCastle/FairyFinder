@@ -45,6 +45,7 @@ public class GameManager : NetworkBehaviour
 	private NetworkVariable<int> playerTurn = new NetworkVariable<int>(0);
 	private HouseController[] houseControllers = new HouseController[3];
 	private Vector3 startingPosition;
+	private Vector3 startingRightDirection;
 	private bool startingPositionChosen = false;
 
 	private bool inputEnabled = false;
@@ -56,6 +57,7 @@ public class GameManager : NetworkBehaviour
 	private const int MAX_ROUND_COUNT = 3;
 	private int currentRoundCount = 0;
 
+	private Dictionary<string, int> playerPointDict = new Dictionary<string, int>();
 
 	private void Awake()
 	{
@@ -94,26 +96,10 @@ public class GameManager : NetworkBehaviour
 					if (Physics.Raycast(ray, out hit, 10f) && navMeshManager.LightshipNavMesh.IsOnNavMesh(hit.point, 0.2f))
 					{
 						startingPosition = hit.point;
+						startingRightDirection = arCamera.transform.right;
 						startingPositionChosen = true;
 
-						RandomizeFairyHouseIndexServerRpc();
-
-						var leftHouse = Instantiate(_housePrefab, hit.point - arCamera.transform.right, Quaternion.identity);
-						leftHouse.AssignHouseIndex(0);
-						leftHouse.NetworkObject.Spawn();
-						houseControllers[0] = leftHouse;
-
-						var middleHouse = Instantiate(_housePrefab, hit.point, Quaternion.identity);
-						middleHouse.AssignHouseIndex(1);
-						middleHouse.NetworkObject.Spawn();
-						houseControllers[1] = middleHouse;
-
-						var rightHouse = Instantiate(_housePrefab, hit.point + arCamera.transform.right, Quaternion.identity);
-						rightHouse.AssignHouseIndex(2);
-						rightHouse.NetworkObject.Spawn();
-						houseControllers[2] = rightHouse;
-
-						houseControllers[fairyIndex.Value].SetFairyEnabled(true);
+						SpawnHouses();
 					}
 				}
 			}
@@ -133,17 +119,54 @@ public class GameManager : NetworkBehaviour
 					houseController.Interact();
 					houseController.TriggerHouseInteractionClientRpc();
 					StartCoroutine(WaitForInteractionAnim());
+
+					if (houseController.ContainsFairy)
+					{
+						AddPointsForPlayerServerRpc(playerTurn.Value.ToString());
+					}
 				}
 			}
 
 		}
 	}
 
+	private void SpawnHouses()
+	{
+		foreach (var house in houseControllers)
+		{
+			if (house != null)
+			{
+				Destroy(house.gameObject);
+			}
+		}
+
+		houseControllers = new HouseController[3];
+
+		RandomizeFairyHouseIndexServerRpc();
+
+		var leftHouse = Instantiate(_housePrefab, startingPosition - startingRightDirection, Quaternion.identity);
+		leftHouse.AssignHouseIndex(0);
+		leftHouse.NetworkObject.Spawn();
+		houseControllers[0] = leftHouse;
+
+		var middleHouse = Instantiate(_housePrefab, startingPosition, Quaternion.identity);
+		middleHouse.AssignHouseIndex(1);
+		middleHouse.NetworkObject.Spawn();
+		houseControllers[1] = middleHouse;
+
+		var rightHouse = Instantiate(_housePrefab, startingPosition + startingRightDirection, Quaternion.identity);
+		rightHouse.AssignHouseIndex(2);
+		rightHouse.NetworkObject.Spawn();
+		houseControllers[2] = rightHouse;
+
+		houseControllers[fairyIndex.Value].SetFairyEnabled(true);
+	}
+
 	private IEnumerator WaitForInteractionAnim()
 	{
 		yield return new WaitForSeconds(HouseController.MAX_REVEAL_ANIM_TIME);
 		SetPlayerTurnServerRpc(playerTurn.Value + 1);
-		
+
 	}
 
 	[ServerRpc(RequireOwnership = false)]
@@ -198,6 +221,11 @@ public class GameManager : NetworkBehaviour
 		{
 			inputEnabled = playerTurn.Value == playerId;
 			Debug.LogFormat("Player input enabled:{0}, Turn: {1}", inputEnabled, playerTurn.Value);
+
+			if (GameNetcodeManager.instance.IsServer)
+			{
+				SpawnHouses();
+			}
 		};
 	}
 
@@ -227,6 +255,13 @@ public class GameManager : NetworkBehaviour
 		{
 			playerTurn.Value = argNewTurn;
 		}
+	}
+
+	[ServerRpc(RequireOwnership = false)]
+	private void AddPointsForPlayerServerRpc(string argPlayer)
+	{
+		playerPointDict[argPlayer]++;
+		Debug.LogFormat("player {0} got a point! now: {1}", argPlayer, playerPointDict[argPlayer]);
 	}
 
 	[ClientRpc]
@@ -259,6 +294,16 @@ public class GameManager : NetworkBehaviour
 		{
 			Debug.Log("Reached max player count");
 			SetGameState(GameState.Game);
+
+			if (GameNetcodeManager.instance.IsServer)
+			{
+				playerPointDict.Clear();
+
+				foreach (var client in GameNetcodeManager.instance.ClientContainerDict)
+				{
+					playerPointDict[client.Value.playerName] = 0;
+				}
+			}
 		}
 	}
 

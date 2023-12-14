@@ -32,8 +32,10 @@ public class GameNetcodeManager : MonoBehaviour
 	private bool connected = false;
 
 	private Dictionary<ulong, ClientContainer> clientContainerDict = new Dictionary<ulong, ClientContainer>();
+	public Dictionary<ulong, ClientContainer> ClientContainerDict => clientContainerDict;
+
 	private ulong localClientId;
-	private class ClientContainer
+	public class ClientContainer
 	{
 		public ulong clientId;
 		public string playerName;
