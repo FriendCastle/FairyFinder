@@ -43,7 +43,7 @@ public class GameManager : NetworkBehaviour
 	private NetworkVariable<int> playerTurn = new NetworkVariable<int>(0);
 
 	private bool inputEnabled = false;
-	private int currentPlayerNumber = -1;
+	private int playerId = -1;
 
 	private void Awake()
 	{
@@ -81,6 +81,10 @@ public class GameManager : NetworkBehaviour
 				case GameState.Lobby:
 					break;
 				case GameState.Game:
+					if (GameNetcodeManager.instance.IsServer)
+					{
+						SetPlayerTurnServerRpc(0);
+					}
 					break;
 				case GameState.GameEnd:
 					break;
@@ -89,10 +93,8 @@ public class GameManager : NetworkBehaviour
 
 		playerTurn.OnValueChanged += delegate
 		{
-			if (playerTurn.Value == currentPlayerNumber)
-			{
-
-			}
+			inputEnabled = playerTurn.Value == playerId;
+			Debug.LogFormat("Player input enabled:{0}, Turn: {1}",, inputEnabled, playerTurn.Value);
 		};
 	}
 
@@ -113,20 +115,16 @@ public class GameManager : NetworkBehaviour
 	private void SetPlayerTurnServerRpc(int argNewTurn)
 	{
 		playerTurn.Value = argNewTurn;
-		SetPlayerTurnClientRpc(argNewTurn);
 	}
 
 	[ClientRpc]
-	private void SetPlayerTurnClientRpc(int argNewTurn)
+	public void SetPlayerIdClientRpc(ulong argClientId, int argPlayerNumber)
 	{
-		playerTurn.Value = argNewTurn;
-		Debug.Log($"Game state updated to: {argNewTurn}");
-	}
-
-	[ClientRpc]
-	public void UpdateCurrentPlayerNumberClientRpc(int argPlayerNumber)
-	{
-		currentPlayerNumber = argPlayerNumber;
+		if (argClientId == NetworkManager.Singleton.LocalClientId)
+		{
+			Debug.Log("setting player id to " + argPlayerNumber);
+			playerId = argPlayerNumber;
+		}
 	}
 
 	private void SetGameState(GameState argGameState)

@@ -153,6 +153,7 @@ public class GameNetcodeManager : MonoBehaviour
 		foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
 		{
 			Debug.LogFormat("Updated name for client {0}", clientId);
+			GameManager.instance.SetPlayerIdClientRpc(clientId, Convert.ToInt32(clientContainerDict[clientId].playerName));
 			clientContainerDict[clientId].gamePlayerController.UpdatePlayerTextClientRpc(clientContainerDict[clientId].playerName);
 		}
 	}
