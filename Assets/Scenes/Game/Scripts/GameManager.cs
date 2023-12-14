@@ -136,7 +136,7 @@ public class GameManager : NetworkBehaviour
 		{
 			if (house != null)
 			{
-				Destroy(house.gameObject);
+				house.NetworkObject.Despawn();
 			}
 		}
 
