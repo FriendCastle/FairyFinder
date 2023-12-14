@@ -490,7 +490,7 @@ MonoBehaviour:
   arCamera: {fileID: 1426212446}
   navMeshManager: {fileID: 743424027}
   _sharedSpaceManager: {fileID: 2038771190}
-  _targetImage: {fileID: 2800000, guid: 28a7622980d0045358c6584b037376b5, type: 3}
+  _targetImage: {fileID: 2800000, guid: e850ea11bd11d478788df040e22f292d, type: 3}
   _targetImageSize: 0.09
 --- !u!1 &1192298862
 GameObject:
