@@ -21,7 +21,7 @@ public class GameManager : NetworkBehaviour
 	private ARSession arSession = null;
 
 	[SerializeField]
-	private GameObject HousePrefab;
+	private HouseController _housePrefab;
 
 	public string roomName { get; private set; }
 
@@ -41,13 +41,65 @@ public class GameManager : NetworkBehaviour
 
 	private NetworkVariable<GameState> currentGameState = new NetworkVariable<GameState>(GameState.None);
 	private NetworkVariable<int> playerTurn = new NetworkVariable<int>(0);
+	private List<HouseController> houseControllers = new List<HouseController>();
+	private Vector3 startingPosition;
+	private bool startingPositionChosen = false;
 
 	private bool inputEnabled = false;
 	private int playerId = -1;
+	private Camera arCamera => Camera.main;
 
 	private void Awake()
 	{
 		instance = this;
+	}
+
+	private void Update()
+	{
+		switch (currentGameState.Value)
+		{
+			case GameState.None:
+				break;
+			case GameState.Lobby:
+				break;
+			case GameState.Game:
+				UpdateGameState();
+				break;
+			case GameState.GameEnd:
+				break;
+		}
+	}
+
+	private void UpdateGameState()
+	{
+		if (GameNetcodeManager.instance.IsServer)
+		{
+			if (startingPositionChosen == false && Input.GetMouseButtonDown(0))
+			{
+				if (navMeshManager.LightshipNavMesh != null)
+				{
+					Ray ray = new Ray(arCamera.transform.position, arCamera.transform.forward);
+					RaycastHit hit;
+
+					// TODO: add reticle to indicate initial house placement
+
+					if (Physics.Raycast(ray, out hit, 10f) && navMeshManager.LightshipNavMesh.IsOnNavMesh(hit.point, 0.2f))
+					{
+						startingPosition = hit.point;
+						startingPositionChosen = true;
+
+						for (int i = 0; i < 3; i++)
+						{
+							var house = Instantiate(_housePrefab, hit.point + ((i == 1 ? -.5f : .5f) * arCamera.transform.right * i), Quaternion.identity);
+							house.NetworkObject.Spawn();
+							Debug.Log(string.Format("Spawned a house at {0}", house.transform.position));
+							houseControllers.Add(house);
+						}
+
+					}
+				}
+			}
+		}
 	}
 
 	public void CreateRoom(int argPlayerCount)
@@ -147,16 +199,6 @@ public class GameManager : NetworkBehaviour
 			Debug.Log("Reached max player count");
 			SetGameState(GameState.Game);
 		}
-	}
-
-	public void SpawnHouse()
-	{
-		SpawnHouse(new Vector3(0, 0, 0));
-	}
-
-	public void SpawnHouse(Vector3 location)
-	{
-		Instantiate(HousePrefab, location, Quaternion.identity);
 	}
 
 	public void OnConnectionStarted()

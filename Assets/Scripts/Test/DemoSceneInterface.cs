@@ -28,7 +28,7 @@ public class DemoSceneInterface : MonoBehaviour {
     //TODO:: Add functionality for players taking turns, earning points, etc -- have the fairies follow the player who found them (and display the number somewhere)
 
     public void SpawnHouse() {
-        gm.SpawnHouse(); 
+        // gm.SpawnHouse();  // commenting out since we've changed the game manager script significantly
         SpawnButton.interactable = false;
         FairyButton.interactable = true;
         InteractButton.interactable = true;

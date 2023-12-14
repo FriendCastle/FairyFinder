@@ -917,7 +917,7 @@ MonoBehaviour:
   navMeshManager: {fileID: 743424027}
   xrOrigin: {fileID: 2038771187}
   arSession: {fileID: 1901929324}
-  HousePrefab: {fileID: 0}
+  _housePrefab: {fileID: 1128024128905907340, guid: 9c3bb41081ef7144f8b7af8c98af33f2, type: 3}
 --- !u!114 &1673720882
 MonoBehaviour:
   m_ObjectHideFlags: 0

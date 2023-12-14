@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class HouseController : MonoBehaviour {
+public class HouseController : NetworkBehaviour
+{
     public bool ContainsFairy { get => containsFairy; }
 
     [SerializeField] private List<GameObject> PossibleHouses;
@@ -41,7 +43,10 @@ public class HouseController : MonoBehaviour {
     public void Interact() {
         Instantiate(OrderedSparkleExplosion[orderIndex], transform.position + SparkleOffset, Quaternion.identity, transform);
         animator.SetTrigger("Disappear");
-        StartCoroutine(RevealFairy());
+		if (containsFairy)
+		{
+			StartCoroutine(RevealFairy());
+		}
         int random = UnityEngine.Random.Range(0, SoundDisappearList.Count - 1);
         audioSource.clip = SoundDisappearList[random];
         audioSource.Play();
@@ -60,7 +65,7 @@ public class HouseController : MonoBehaviour {
             Instantiate(OrderedSparkleArea[orderIndex], transform.position, Quaternion.identity, transform);
         }
 
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(3f);
         Destroy(this.gameObject);
 
     }
