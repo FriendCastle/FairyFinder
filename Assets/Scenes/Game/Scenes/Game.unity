@@ -168,10 +168,10 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 304809388}
-    PlayerPrefab: {fileID: 5724665782975765743, guid: 78ae529a85dca4974a96b133b155d717, type: 3}
+    PlayerPrefab: {fileID: 5724665782975765743, guid: 8b2485556932f42469b23948d7557969, type: 3}
     Prefabs:
       NetworkPrefabsLists:
-      - {fileID: 11400000, guid: 35c8d7e9402fb48d2b16ed6cb7f7ce50, type: 2}
+      - {fileID: 11400000, guid: 18957db11c9974cd48053be11de052c9, type: 2}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -453,6 +453,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1031790804}
   - component: {fileID: 1031790805}
+  - component: {fileID: 1031790806}
   m_Layer: 0
   m_Name: NetcodeManager
   m_TagString: Untagged
@@ -492,6 +493,26 @@ MonoBehaviour:
   _sharedSpaceManager: {fileID: 2038771190}
   _targetImage: {fileID: 2800000, guid: 28a7622980d0045358c6584b037376b5, type: 3}
   _targetImageSize: 0.09
+--- !u!114 &1031790806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1031790802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3812410914
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 0
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1192298862
 GameObject:
   m_ObjectHideFlags: 0
@@ -1051,6 +1072,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1362406709829014567, guid: af759c96808944794b0fa4f49064835d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6377398757727715446, guid: af759c96808944794b0fa4f49064835d, type: 3}
       propertyPath: m_Pivot.x
       value: 0

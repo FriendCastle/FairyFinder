@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 610074307790285680}
   - component: {fileID: 2092627390430157612}
-  - component: {fileID: 6222830791816553611}
-  - component: {fileID: 6935288540700272566}
+  - component: {fileID: 1811962217253330073}
+  - component: {fileID: 7001554557939898888}
   m_Layer: 0
   m_Name: Game_Player
   m_TagString: Untagged
@@ -33,6 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 791116598931465901}
+  - {fileID: 5195732441483071793}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2092627390430157612
@@ -55,7 +56,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &6222830791816553611
+--- !u!114 &1811962217253330073
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -64,7 +65,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5724665782975765743}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6b1b18c7a3064ad0b0699b018ef6bdf, type: 3}
+  m_Script: {fileID: 11500000, guid: 8a9bbe5a8727d49cb81af50f0f0defe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SyncPositionX: 1
@@ -85,7 +86,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &6935288540700272566
+--- !u!114 &7001554557939898888
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,12 +95,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5724665782975765743}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbd4ac272dc184f93ba8699b92cda19b, type: 3}
+  m_Script: {fileID: 11500000, guid: 6d8fca3edf8454d118619f5dfc6024bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAvatar: {fileID: 6222830791816553611}
-  networkObject: {fileID: 2092627390430157612}
-  model: {fileID: 121963286333357079}
+  _playerAvatar: {fileID: 1811962217253330073}
+  _networkObject: {fileID: 2092627390430157612}
+  _model: {fileID: 121963286333357079}
+  _playerText: {fileID: 2009990878922747290}
 --- !u!1 &9124221257215553363
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,14 +129,14 @@ RectTransform:
   m_GameObject: {fileID: 9124221257215553363}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 791116598931465901}
+  m_Father: {fileID: 610074307790285680}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1.5}
+  m_AnchoredPosition: {x: 0, y: 0.5}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &1871725141847215170
@@ -157,7 +159,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -199,10 +201,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PLAYER
+  m_text: Player 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -210,14 +212,14 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 0
+  m_enableVertexGradient: 1
   m_colorMode: 3
   m_fontColorGradient:
     topLeft: {r: 1, g: 1, b: 1, a: 1}
     topRight: {r: 1, g: 1, b: 1, a: 1}
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}
-  m_fontColorGradientPreset: {fileID: 0}
+  m_fontColorGradientPreset: {fileID: 11400000, guid: 421fa579d28be4d64bcec81f586f80ac, type: 2}
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
@@ -345,10 +347,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 713041166133895568, guid: d3702c3a83a4b764e92e3e2cadfdbbd3, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5195732441483071793}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d3702c3a83a4b764e92e3e2cadfdbbd3, type: 3}
 --- !u!1 &121963286333357079 stripped

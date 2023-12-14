@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
-public class GameNetcodeManager : MonoBehaviour
+public class GameNetcodeManager : NetworkBehaviour
 {
 	public static GameNetcodeManager instance { get; private set; }
 
@@ -28,6 +28,27 @@ public class GameNetcodeManager : MonoBehaviour
 	private bool _startAsHost = false;
 
 	private bool connected = false;
+
+	private Dictionary<ulong, ClientContainer> clientContainerDict = new Dictionary<ulong, ClientContainer>();
+	private ulong localClientId;
+	private class ClientContainer
+	{
+		public ulong clientId;
+		public string playerName;
+		public GamePlayerController gamePlayerController;
+
+		public ClientContainer(ulong clientId, string playerName, GamePlayerController gamePlayerController)
+		{
+			this.clientId = clientId;
+			this.playerName = playerName;
+			this.gamePlayerController = gamePlayerController;
+		}
+
+		public override string ToString()
+		{
+			return $"ClientContainer - ClientId: {clientId}, PlayerName: {playerName}, GamePlayerController: {gamePlayerController}";
+		}
+	}
 
 	void Awake()
 	{
@@ -108,20 +129,44 @@ public class GameNetcodeManager : MonoBehaviour
 	{
 		Debug.Log("Netcode server ready");
 		connected = true;
+		clientContainerDict.Clear();
+
+		localClientId = NetworkManager.Singleton.LocalClientId;
+		clientContainerDict[localClientId] = new ClientContainer(localClientId, "1", NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<GamePlayerController>());
+
+		UpdateAllPlayerNames();
 		TurnOffLocalClientAvatar();
 	}
 
-	private void OnClientConnectedCallback(ulong clientId)
+	private void UpdateAllPlayerNames()
 	{
-		Debug.Log($"Client connected: {clientId}");
-
-		if (_startAsHost)
+		foreach (var client in clientContainerDict)
 		{
+			Debug.LogFormat("Logging out client data: {0}", client.ToString());
+		}
+
+		foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+		{
+			Debug.LogFormat("Updated name for client {0}", clientId);
+			clientContainerDict[clientId].gamePlayerController.UpdatePlayerName(clientId, clientContainerDict[clientId].playerName);
+		}
+	}
+
+	private void OnClientConnectedCallback(ulong argClientId)
+	{
+		Debug.Log($"Client connected: {argClientId}");
+
+		if (_startAsHost == false)
+		{
+			localClientId = NetworkManager.Singleton.LocalClientId;
+			TurnOffLocalClientAvatar();
+			connected = true;
 		}
 		else
 		{
-			TurnOffLocalClientAvatar();
-			connected = true;
+			clientContainerDict[argClientId] = new ClientContainer(argClientId, NetworkManager.Singleton.ConnectedClientsIds.Count.ToString(),
+			NetworkManager.Singleton.ConnectedClients[argClientId].PlayerObject.GetComponent<GamePlayerController>());
+			UpdateAllPlayerNames();
 		}
 	}
 
@@ -132,8 +177,7 @@ public class GameNetcodeManager : MonoBehaviour
 			return;
 		}
 
-		SharedARTestPlayerController playerController = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<SharedARTestPlayerController>();
-		playerController.SetModelVisibility(false);
+		NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<GamePlayerController>().SetModelVisibility(false);
 	}
 
 	// Handle network disconnect

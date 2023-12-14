@@ -1,21 +1,52 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using TMPro;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public class GamePlayerController : MonoBehaviour
+public class GamePlayerController : NetworkBehaviour
 {
 	[SerializeField]
-	private PlayerAvatar playerAvatar;
+	private GamePlayerAvatar _playerAvatar;
 
 	[SerializeField]
-	private NetworkObject networkObject;
+	private NetworkObject _networkObject;
 
 	[SerializeField]
-	private GameObject model;
+	private GameObject _model;
+
+	[SerializeField]
+	private TMP_Text _playerText;
+
+	private NetworkVariable<FixedString32Bytes> playerName = new NetworkVariable<FixedString32Bytes>(writePerm: NetworkVariableWritePermission.Server);
+
+	private void Awake()
+	{
+	}
+
+	public override void OnNetworkSpawn()
+	{
+		base.OnNetworkSpawn();
+	}
 
 	public void SetModelVisibility(bool argVisible)
 	{
-		model.SetActive(argVisible);
+		_model.SetActive(argVisible);
+	}
+
+	public void UpdatePlayerName(ulong argClientId, FixedString32Bytes argName)
+	{
+		if (argClientId == OwnerClientId)
+		{
+			UpdatePlayerTextClientRpc(argClientId, argName);
+		}
+	}
+
+
+	[ClientRpc]
+	private void UpdatePlayerTextClientRpc(ulong argClientId, FixedString32Bytes argName)
+	{
+		playerName.Value = argName;
+		_playerText.text = "Player " + argName.Value;
 	}
 }
