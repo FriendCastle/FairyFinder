@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FairyFinderColorGradient
   m_EditorClassIdentifier: 
   colorMode: 3
-  topLeft: {r: 1, g: 0.88235295, b: 0, a: 1}
-  topRight: {r: 1, g: 0.88235295, b: 0, a: 1}
-  bottomLeft: {r: 0.53333336, g: 1, b: 0.5372549, a: 1}
-  bottomRight: {r: 0.53333336, g: 1, b: 0.5372549, a: 1}
+  topLeft: {r: 0.98823535, g: 0.95294124, b: 0.39607847, a: 1}
+  topRight: {r: 0.9882353, g: 0.9529412, b: 0.39607844, a: 1}
+  bottomLeft: {r: 0.9960785, g: 0.9803922, b: 0.7803922, a: 1}
+  bottomRight: {r: 0.99607843, g: 0.98039216, b: 0.78039217, a: 1}
