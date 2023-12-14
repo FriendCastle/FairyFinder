@@ -90,7 +90,7 @@ public class GameManager : NetworkBehaviour
 
 						for (int i = 0; i < 3; i++)
 						{
-							var house = Instantiate(_housePrefab, hit.point + ((i == 1 ? -.5f : .5f) * arCamera.transform.right * i), Quaternion.identity);
+							var house = Instantiate(_housePrefab, hit.point + ((i == 1 ? -1f : 1f) * arCamera.transform.right * i), Quaternion.identity);
 							house.NetworkObject.Spawn();
 							Debug.Log(string.Format("Spawned a house at {0}", house.transform.position));
 							houseControllers.Add(house);
