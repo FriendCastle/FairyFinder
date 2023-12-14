@@ -83,7 +83,7 @@ public class GameManager : NetworkBehaviour
 				case GameState.Game:
 					if (GameNetcodeManager.instance.IsServer)
 					{
-						SetPlayerTurnServerRpc(0);
+						SetPlayerTurnServerRpc(1);
 					}
 					break;
 				case GameState.GameEnd:
