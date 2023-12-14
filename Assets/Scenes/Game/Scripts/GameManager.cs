@@ -53,6 +53,7 @@ public class GameManager : NetworkBehaviour
 	private Camera arCamera => Camera.main;
 
 	private NetworkVariable<int> fairyIndex = new NetworkVariable<int>(-1);
+	public int FairyIndex => fairyIndex.Value;
 
 	private const int MAX_ROUND_COUNT = 3;
 	private int currentRoundCount = 0;
@@ -115,12 +116,12 @@ public class GameManager : NetworkBehaviour
 				var houseController = hit.collider.transform.GetComponentInParent<HouseController>();
 				if (houseController != null)
 				{
-					Debug.Log("hit a house!");
+					Debug.LogFormat("hit house {0}, fairy was in: {1}!", houseController.houseIndex.Value, fairyIndex.Value);
 					houseController.Interact();
 					houseController.TriggerHouseInteractionClientRpc();
 					StartCoroutine(WaitForInteractionAnim());
 
-					if (houseController.ContainsFairy)
+					if (houseController.houseIndex.Value == fairyIndex.Value)
 					{
 						AddPointsForPlayerServerRpc(playerTurn.Value.ToString());
 					}
@@ -145,21 +146,21 @@ public class GameManager : NetworkBehaviour
 		RandomizeFairyHouseIndexServerRpc();
 
 		var leftHouse = Instantiate(_housePrefab, startingPosition - startingRightDirection, Quaternion.identity);
-		leftHouse.AssignHouseIndex(0);
 		leftHouse.NetworkObject.Spawn();
+		leftHouse.AssignHouseIndexServerRpc(0);
 		houseControllers[0] = leftHouse;
 
 		var middleHouse = Instantiate(_housePrefab, startingPosition, Quaternion.identity);
-		middleHouse.AssignHouseIndex(1);
 		middleHouse.NetworkObject.Spawn();
+		middleHouse.AssignHouseIndexServerRpc(1);
 		houseControllers[1] = middleHouse;
 
 		var rightHouse = Instantiate(_housePrefab, startingPosition + startingRightDirection, Quaternion.identity);
-		rightHouse.AssignHouseIndex(2);
 		rightHouse.NetworkObject.Spawn();
+		rightHouse.AssignHouseIndexServerRpc(2);
 		houseControllers[2] = rightHouse;
 
-		houseControllers[fairyIndex.Value].SetFairyEnabled(true);
+		Debug.Log("Spawning fairy in house " + fairyIndex.Value);
 	}
 
 	private IEnumerator WaitForInteractionAnim()

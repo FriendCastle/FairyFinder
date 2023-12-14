@@ -6,10 +6,8 @@ using UnityEngine;
 
 public class HouseController : NetworkBehaviour
 {
-    public bool ContainsFairy { get => containsFairy; }
 
     [SerializeField] private List<GameObject> PossibleHouses;
-    [SerializeField] private List<GameObject> PossibleFairies;
 
     [SerializeField] private List<GameObject> OrderedSparkleArea;
     [SerializeField] private List<GameObject> OrderedSparkleExplosion;
@@ -19,14 +17,15 @@ public class HouseController : NetworkBehaviour
 
     [SerializeField] private Vector3 SparkleOffset;
 
-    private bool containsFairy;
     private GameObject houseObject;
+
+	[SerializeField]
     private GameObject fairyObject;
     private AudioSource audioSource;
     private Animator animator;
     private int orderIndex;
 
-	public int houseIndex {get; private set;}
+	public NetworkVariable<int> houseIndex = new NetworkVariable<int>(-1);
 
 	public const float MAX_REVEAL_ANIM_TIME = 3f;
 
@@ -44,15 +43,17 @@ public class HouseController : NetworkBehaviour
         audioSource.Play();
     }
 
-	public void AssignHouseIndex(int argHouseIndex)
+	[ServerRpc(RequireOwnership = false)]
+	public void AssignHouseIndexServerRpc(int argHouseIndex)
 	{
-		houseIndex = argHouseIndex;
+		houseIndex.Value = argHouseIndex;
 	}
+
 
     public void Interact() {
         Instantiate(OrderedSparkleExplosion[orderIndex], transform.position + SparkleOffset, Quaternion.identity, transform);
         animator.SetTrigger("Disappear");
-		if (containsFairy)
+		if (GameManager.instance.FairyIndex == houseIndex.Value)
 		{
 			StartCoroutine(RevealFairy());
 		}
@@ -66,32 +67,23 @@ public class HouseController : NetworkBehaviour
     }
 
     public void AddFairy() {
-        int random = UnityEngine.Random.Range(0, PossibleFairies.Count - 1);
-        fairyObject = Instantiate(PossibleFairies[random], transform.position, Quaternion.identity, transform);
-        fairyObject.SetActive(false);
     }
 
     IEnumerator RevealFairy() {
         if (fairyObject != null) {
-            fairyObject.transform.SetParent(null);
             fairyObject.SetActive(true);
             Instantiate(OrderedSparkleArea[orderIndex], transform.position, Quaternion.identity, transform);
         }
 
         yield return new WaitForSeconds(MAX_REVEAL_ANIM_TIME);
-        Destroy(this.gameObject);
+        gameObject.SetActive(false);
 
     }
 
 	private IEnumerator DelayedDestroy()
 	{
 		yield return new WaitForSeconds(MAX_REVEAL_ANIM_TIME);
-		Destroy(gameObject);
-	}
-
-	public void SetFairyEnabled(bool argEnabled)
-	{
-		containsFairy = argEnabled;
+        gameObject.SetActive(false);
 	}
 
 	[ClientRpc]
