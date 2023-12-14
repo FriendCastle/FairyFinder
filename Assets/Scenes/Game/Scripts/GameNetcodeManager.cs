@@ -5,8 +5,10 @@ using Unity.Netcode;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using System;
+using Random = UnityEngine.Random;
 
-public class GameNetcodeManager : NetworkBehaviour
+public class GameNetcodeManager : MonoBehaviour
 {
 	public static GameNetcodeManager instance { get; private set; }
 
@@ -49,6 +51,9 @@ public class GameNetcodeManager : NetworkBehaviour
 			return $"ClientContainer - ClientId: {clientId}, PlayerName: {playerName}, GamePlayerController: {gamePlayerController}";
 		}
 	}
+
+	public bool IsServer => NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer;
+	private Action<ulong, int> OnClientConnected;
 
 	void Awake()
 	{
@@ -164,9 +169,15 @@ public class GameNetcodeManager : NetworkBehaviour
 		}
 		else
 		{
-			clientContainerDict[argClientId] = new ClientContainer(argClientId, NetworkManager.Singleton.ConnectedClientsIds.Count.ToString(),
+			int clientCount = NetworkManager.Singleton.ConnectedClientsIds.Count;
+			clientContainerDict[argClientId] = new ClientContainer(argClientId, clientCount.ToString(),
 			NetworkManager.Singleton.ConnectedClients[argClientId].PlayerObject.GetComponent<GamePlayerController>());
 			UpdateAllPlayerNames();
+
+			if (OnClientConnected != null)
+			{
+				OnClientConnected(argClientId, clientCount);
+			}
 		}
 	}
 
@@ -193,5 +204,16 @@ public class GameNetcodeManager : NetworkBehaviour
 
 		Debug.Log($"Client disconnected");
 		connected = false;
+	}
+
+	public void AddOnPlayerConnectedListener(System.Action<ulong, int> argOnPlayerConnected)
+	{
+		OnClientConnected -= argOnPlayerConnected;
+		OnClientConnected += argOnPlayerConnected;
+	}
+
+	public void RemoveOnPlayerConnectedListener(System.Action<ulong, int> argOnPlayerConnected)
+	{
+		OnClientConnected -= argOnPlayerConnected;
 	}
 }
