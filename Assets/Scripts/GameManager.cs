@@ -94,7 +94,7 @@ public class GameManager : NetworkBehaviour
 		playerTurn.OnValueChanged += delegate
 		{
 			inputEnabled = playerTurn.Value == playerId;
-			Debug.LogFormat("Player input enabled:{0}, Turn: {1}",, inputEnabled, playerTurn.Value);
+			Debug.LogFormat("Player input enabled:{0}, Turn: {1}", inputEnabled, playerTurn.Value);
 		};
 	}
 
