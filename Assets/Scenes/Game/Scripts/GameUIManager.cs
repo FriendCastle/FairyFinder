@@ -66,6 +66,11 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 		_gameScreen.TransitionTo(GameScreen.PanelType.Game);
 	}
 
+	public void TransitionToLobbyPanel()
+	{
+		_gameScreen.TransitionTo(GameScreen.PanelType.Lobby);
+	}
+
 	public void UpdatePlayerNumberText(string argPlayerNumber)
 	{
 		_gameScreen.UpdatePlayerNumberText(argPlayerNumber);
@@ -282,7 +287,9 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 		public enum PanelType
 		{
 			Scan,
-			Game
+			Lobby,
+			Game,
+			GameEnd
 		}
 
 		[SerializeField]
@@ -302,7 +309,7 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 
 		protected override void InitializePanels()
 		{
-			panels = new Panel[]{ _scanImagePanel, _gamePanel };
+			panels = new Panel[]{ _scanImagePanel, _lobbyPanel, _gamePanel, _gameEndPanel };
 		}
 
 		public override void TransitionTo(int argToIndex)

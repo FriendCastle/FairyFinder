@@ -187,6 +187,7 @@ public class GameManager : NetworkBehaviour
 					{
 						SetPlayerTurnServerRpc(1);
 					}
+					GameUIManager.instance.TransitionToGamePanel();
 					break;
 				case GameState.GameEnd:
 					break;
@@ -263,6 +264,6 @@ public class GameManager : NetworkBehaviour
 
 	public void OnConnectionStarted()
 	{
-		GameUIManager.instance.TransitionToGamePanel();
+		GameUIManager.instance.TransitionToLobbyPanel();
 	}
 }
