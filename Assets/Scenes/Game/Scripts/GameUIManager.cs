@@ -287,7 +287,13 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 		private ScanImagePanel _scanImagePanel;
 
 		[SerializeField]
-		private ScanImagePanel _gamePanel;
+		private LobbyPanel _lobbyPanel;
+
+		[SerializeField]
+		private GamePanel _gamePanel;
+
+		[SerializeField]
+		private GameEndPanel _gameEndPanel;
 
 		protected override void InitializePanels()
 		{
@@ -317,7 +323,28 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 
 
 		[Serializable]
+		private class LobbyPanel : Panel
+		{
+			[SerializeField]
+			private TMP_Text _instructionText;
+
+			public override void Setup(Screen argPanelOwner)
+			{
+				base.Setup(argPanelOwner);
+			}
+		}
+
+		[Serializable]
 		private class GamePanel : Panel
+		{
+			public override void Setup(Screen argPanelOwner)
+			{
+				base.Setup(argPanelOwner);
+			}
+		}
+
+		[Serializable]
+		private class GameEndPanel : Panel
 		{
 			public override void Setup(Screen argPanelOwner)
 			{
