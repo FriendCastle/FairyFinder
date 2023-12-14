@@ -235,6 +235,7 @@ public class GameManager : NetworkBehaviour
 		{
 			Debug.Log("setting player id to " + argPlayerNumber);
 			playerId = argPlayerNumber;
+			GameUIManager.instance.UpdatePlayerNumberText("Player " + argPlayerNumber.ToString());
 		}
 	}
 

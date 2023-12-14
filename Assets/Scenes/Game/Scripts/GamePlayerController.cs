@@ -16,7 +16,12 @@ public class GamePlayerController : NetworkBehaviour
 	private GameObject _model;
 
 	[SerializeField]
+	private GameObject[] _wands;
+
+	[SerializeField]
 	private TMP_Text _playerText;
+
+	private int currentWandIndex;
 
 	private void Awake()
 	{
@@ -37,5 +42,8 @@ public class GamePlayerController : NetworkBehaviour
 	public void UpdatePlayerTextClientRpc(FixedString32Bytes argName)
 	{
 		_playerText.text = "Player " + argName.Value;
+		currentWandIndex = Convert.ToInt32(argName.Value) - 1;
+
+		_wands[currentWandIndex].SetActive(true);
 	}
 }

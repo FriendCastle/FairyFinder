@@ -66,6 +66,11 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 		_gameScreen.TransitionTo(GameScreen.PanelType.Game);
 	}
 
+	public void UpdatePlayerNumberText(string argPlayerNumber)
+	{
+		_gameScreen.UpdatePlayerNumberText(argPlayerNumber);
+	}
+
 	#region UI Hookup Classes
 
 	[Serializable]
@@ -312,6 +317,11 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 			_roomCodeText.text = string.Format("Room Code:\n{0}", GameManager.instance.roomName);
 		}
 
+		public void UpdatePlayerNumberText(string argPlayerNumber)
+		{
+			_gamePanel.UpdatePlayerNumberText(argPlayerNumber);
+		}
+
 		[Serializable]
 		private class ScanImagePanel : Panel
 		{
@@ -337,9 +347,17 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 		[Serializable]
 		private class GamePanel : Panel
 		{
+			[SerializeField]
+			private TMP_Text _playerNumberText;
+
 			public override void Setup(Screen argPanelOwner)
 			{
 				base.Setup(argPanelOwner);
+			}
+
+			public void UpdatePlayerNumberText(string argText)
+			{
+				_playerNumberText.text = argText;
 			}
 		}
 
