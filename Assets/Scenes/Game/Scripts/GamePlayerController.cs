@@ -18,8 +18,6 @@ public class GamePlayerController : NetworkBehaviour
 	[SerializeField]
 	private TMP_Text _playerText;
 
-	private NetworkVariable<FixedString32Bytes> playerName = new NetworkVariable<FixedString32Bytes>(writePerm: NetworkVariableWritePermission.Server);
-
 	private void Awake()
 	{
 	}
@@ -34,19 +32,10 @@ public class GamePlayerController : NetworkBehaviour
 		_model.SetActive(argVisible);
 	}
 
-	public void UpdatePlayerName(ulong argClientId, FixedString32Bytes argName)
-	{
-		if (argClientId == OwnerClientId)
-		{
-			UpdatePlayerTextClientRpc(argClientId, argName);
-		}
-	}
-
 
 	[ClientRpc]
-	private void UpdatePlayerTextClientRpc(ulong argClientId, FixedString32Bytes argName)
+	public void UpdatePlayerTextClientRpc(FixedString32Bytes argName)
 	{
-		playerName.Value = argName;
 		_playerText.text = "Player " + argName.Value;
 	}
 }

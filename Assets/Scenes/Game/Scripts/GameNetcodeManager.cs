@@ -148,7 +148,7 @@ public class GameNetcodeManager : NetworkBehaviour
 		foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
 		{
 			Debug.LogFormat("Updated name for client {0}", clientId);
-			clientContainerDict[clientId].gamePlayerController.UpdatePlayerName(clientId, clientContainerDict[clientId].playerName);
+			clientContainerDict[clientId].gamePlayerController.UpdatePlayerTextClientRpc(clientContainerDict[clientId].playerName);
 		}
 	}
 
