@@ -76,6 +76,16 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 		_gameScreen.UpdatePlayerNumberText(argPlayerNumber);
 	}
 
+	public void UpdateGameInstructionText(string argText)
+	{
+		_gameScreen.UpdateGameInstructionText(argText);
+	}
+
+	public void UpdateGameEndText(string argText)
+	{
+		_gameScreen.UpdateGameEndText(argText);
+	}
+
 	#region UI Hookup Classes
 
 	[Serializable]
@@ -329,6 +339,17 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 			_gamePanel.UpdatePlayerNumberText(argPlayerNumber);
 		}
 
+		public void UpdateGameInstructionText(string argText)
+		{
+			_gamePanel.UpdateInstructionText(argText);
+		}
+
+		public void UpdateGameEndText(string argText)
+		{
+			_gameEndPanel.UpdateGameEndText(argText);
+		}
+
+
 		[Serializable]
 		private class ScanImagePanel : Panel
 		{
@@ -357,6 +378,9 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 			[SerializeField]
 			private TMP_Text _playerNumberText;
 
+			[SerializeField]
+			private TMP_Text _instructionText;
+
 			public override void Setup(Screen argPanelOwner)
 			{
 				base.Setup(argPanelOwner);
@@ -366,14 +390,28 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 			{
 				_playerNumberText.text = argText;
 			}
+
+			public void UpdateInstructionText(string argText)
+			{
+				_instructionText.text = argText;
+			}
 		}
 
 		[Serializable]
 		private class GameEndPanel : Panel
 		{
+			[SerializeField]
+			private TMP_Text _gameOverText;
+
+
 			public override void Setup(Screen argPanelOwner)
 			{
 				base.Setup(argPanelOwner);
+			}
+
+			public void UpdateGameEndText(string argText)
+			{
+				_gameOverText.text = argText;
 			}
 		}
 	}

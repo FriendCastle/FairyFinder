@@ -83,24 +83,31 @@ public class GameManager : NetworkBehaviour
 
 	private void UpdateGameState()
 	{
-		if (GameNetcodeManager.instance.IsServer)
+		if (GameNetcodeManager.instance.IsServer && startingPositionChosen == false)
 		{
-			if (startingPositionChosen == false && Input.GetMouseButtonDown(0))
+			GameUIManager.instance.UpdateGameInstructionText("Look Around!");
+
+			if (navMeshManager.LightshipNavMesh != null)
 			{
-				if (navMeshManager.LightshipNavMesh != null)
+				Ray ray = new Ray(arCamera.transform.position, arCamera.transform.forward);
+				RaycastHit hit;
+				bool hitSomething = Physics.Raycast(ray, out hit, 10f) && navMeshManager.LightshipNavMesh.IsOnNavMesh(hit.point, 0.2f);
+
+				// TODO: add reticle to indicate initial house placement
+
+				if (hitSomething)
 				{
-					Ray ray = new Ray(arCamera.transform.position, arCamera.transform.forward);
-					RaycastHit hit;
+					GameUIManager.instance.UpdateGameInstructionText("Tap To Start!");
 
-					// TODO: add reticle to indicate initial house placement
-
-					if (Physics.Raycast(ray, out hit, 10f) && navMeshManager.LightshipNavMesh.IsOnNavMesh(hit.point, 0.2f))
+					if (Input.GetMouseButtonDown(0) && hitSomething)
 					{
 						startingPosition = hit.point;
 						startingRightDirection = arCamera.transform.right;
 						startingPositionChosen = true;
 
 						SpawnHouses();
+
+						SetPlayerTurnServerRpc(1);
 					}
 				}
 			}
@@ -218,10 +225,6 @@ public class GameManager : NetworkBehaviour
 				case GameState.Lobby:
 					break;
 				case GameState.Game:
-					if (GameNetcodeManager.instance.IsServer)
-					{
-						SetPlayerTurnServerRpc(1);
-					}
 					GameUIManager.instance.TransitionToGamePanel();
 					break;
 				case GameState.GameEnd:
@@ -233,6 +236,7 @@ public class GameManager : NetworkBehaviour
 		{
 			inputEnabled = playerTurn.Value == playerId;
 			Debug.LogFormat("Player input enabled:{0}, Turn: {1}", inputEnabled, playerTurn.Value);
+			GameUIManager.instance.UpdateGameInstructionText(string.Format("Player {0}'s Turn", playerTurn.Value));
 
 			if (GameNetcodeManager.instance.IsServer && startingPositionChosen)
 			{
@@ -262,6 +266,11 @@ public class GameManager : NetworkBehaviour
 			playerTurn.Value = 1;
 			currentRoundCount += 1;
 			Debug.Log("Current Round: " + currentRoundCount);
+
+			if (currentRoundCount == MAX_ROUND_COUNT)
+			{
+
+			}
 		}
 		else
 		{
