@@ -117,19 +117,24 @@ public class GameManager : NetworkBehaviour
 				if (houseController != null)
 				{
 					Debug.LogFormat("hit house {0}, fairy was in: {1}!", houseController.houseIndex.Value, fairyIndex.Value);
-					houseController.Interact();
-					houseController.TriggerHouseInteractionClientRpc();
-					StartCoroutine(WaitForInteractionAnim());
-
-					if (houseController.houseIndex.Value == fairyIndex.Value)
-					{
-						AddPointsForPlayerServerRpc(playerTurn.Value.ToString());
-					}
+					TriggerHouseInteractionServerRpc(houseController.houseIndex.Value);
 				}
 			}
 
 		}
 	}
+
+	[ServerRpc(RequireOwnership = false)]
+	private void TriggerHouseInteractionServerRpc(int argHouseIndex)
+	{
+		if (GameNetcodeManager.instance.IsServer)
+		{
+			houseControllers[argHouseIndex].Interact();
+			houseControllers[argHouseIndex].TriggerHouseInteractionClientRpc();
+			StartCoroutine(WaitForInteractionAnim(argHouseIndex));
+		}
+	}
+
 
 	private void SpawnHouses()
 	{
@@ -163,9 +168,15 @@ public class GameManager : NetworkBehaviour
 		Debug.Log("Spawning fairy in house " + fairyIndex.Value);
 	}
 
-	private IEnumerator WaitForInteractionAnim()
+	private IEnumerator WaitForInteractionAnim(int argHouseIndex)
 	{
 		yield return new WaitForSeconds(HouseController.MAX_REVEAL_ANIM_TIME);
+
+		if (argHouseIndex == fairyIndex.Value)
+		{
+			AddPointsForPlayerServerRpc(playerTurn.Value.ToString());
+		}
+
 		SetPlayerTurnServerRpc(playerTurn.Value + 1);
 
 	}
