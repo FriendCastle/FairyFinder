@@ -55,7 +55,7 @@ public class GameManager : NetworkBehaviour
 	private NetworkVariable<int> fairyIndex = new NetworkVariable<int>(-1);
 	public int FairyIndex => fairyIndex.Value;
 
-	private const int MAX_ROUND_COUNT = 5;
+	private const int MAX_ROUND_COUNT = 3;
 	private int currentRoundCount = 0;
 
 	private Dictionary<string, int> playerPointDict = new Dictionary<string, int>();
@@ -139,11 +139,16 @@ public class GameManager : NetworkBehaviour
 		if (GameNetcodeManager.instance.IsServer)
 		{
 			houseControllers[argHouseIndex].Interact();
+
+			if (argHouseIndex == fairyIndex.Value)
+			{
+				AddPointsForPlayerServerRpc(playerTurn.Value.ToString());
+			}
+
 			houseControllers[argHouseIndex].TriggerHouseInteractionClientRpc();
 			StartCoroutine(WaitForInteractionAnim(argHouseIndex));
 		}
 	}
-
 
 	private void SpawnHouses()
 	{
@@ -180,11 +185,6 @@ public class GameManager : NetworkBehaviour
 	private IEnumerator WaitForInteractionAnim(int argHouseIndex)
 	{
 		yield return new WaitForSeconds(HouseController.MAX_REVEAL_ANIM_TIME);
-
-		if (argHouseIndex == fairyIndex.Value)
-		{
-			AddPointsForPlayerServerRpc(playerTurn.Value.ToString());
-		}
 
 		SetPlayerTurnServerRpc(playerTurn.Value + 1);
 
