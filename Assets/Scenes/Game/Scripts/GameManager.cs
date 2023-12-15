@@ -55,10 +55,12 @@ public class GameManager : NetworkBehaviour
 	private NetworkVariable<int> fairyIndex = new NetworkVariable<int>(-1);
 	public int FairyIndex => fairyIndex.Value;
 
-	private const int MAX_ROUND_COUNT = 3;
+	private const int MAX_ROUND_COUNT = 5;
 	private int currentRoundCount = 0;
 
 	private Dictionary<string, int> playerPointDict = new Dictionary<string, int>();
+	private NetworkVariable<int> playerWithMostPoints = new NetworkVariable<int>();
+	private NetworkVariable<int> mostPointCount = new NetworkVariable<int>(-1);
 
 	private void Awake()
 	{
@@ -229,6 +231,7 @@ public class GameManager : NetworkBehaviour
 					break;
 				case GameState.GameEnd:
 					inputEnabled = false;
+					GameUIManager.instance.UpdateGameEndText(string.Format("Game Over!\nPlayer {0} won with {1} points!", playerWithMostPoints.Value, mostPointCount.Value));
 					GameUIManager.instance.TransitionToGameEndPanel();
 					break;
 			}
@@ -288,6 +291,21 @@ public class GameManager : NetworkBehaviour
 	{
 		playerPointDict[argPlayer]++;
 		Debug.LogFormat("player {0} got a point! now: {1}", argPlayer, playerPointDict[argPlayer]);
+
+		int maxPoints = int.MinValue;
+		KeyValuePair<string, int> winningPlayer = default;
+
+		foreach (var player in playerPointDict)
+		{
+			if (player.Value > maxPoints)
+			{
+				maxPoints = player.Value;
+				winningPlayer = player;
+			}
+		}
+
+		playerWithMostPoints.Value = Convert.ToInt32(winningPlayer.Key);
+		mostPointCount.Value = winningPlayer.Value;
 	}
 
 	[ClientRpc]
