@@ -228,6 +228,8 @@ public class GameManager : NetworkBehaviour
 					GameUIManager.instance.TransitionToGamePanel();
 					break;
 				case GameState.GameEnd:
+					inputEnabled = false;
+					GameUIManager.instance.TransitionToGameEndPanel();
 					break;
 			}
 		};
@@ -263,13 +265,16 @@ public class GameManager : NetworkBehaviour
 	{
 		if (argNewTurn > currentMaxPlayerCount)
 		{
-			playerTurn.Value = 1;
 			currentRoundCount += 1;
 			Debug.Log("Current Round: " + currentRoundCount);
 
 			if (currentRoundCount == MAX_ROUND_COUNT)
 			{
-
+				SetGameStateServerRpc(GameState.GameEnd);
+			}
+			else
+			{
+				playerTurn.Value = 1;
 			}
 		}
 		else

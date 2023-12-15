@@ -56,9 +56,9 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 		currentScreen = argToIndex;
 	}
 
-	public void UpdateRoomCode()
+	public void TransitionToLobbyPanel()
 	{
-		_gameScreen.UpdateRoomCode();
+		_gameScreen.TransitionTo(GameScreen.PanelType.Lobby);
 	}
 
 	public void TransitionToGamePanel()
@@ -66,9 +66,15 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 		_gameScreen.TransitionTo(GameScreen.PanelType.Game);
 	}
 
-	public void TransitionToLobbyPanel()
+
+	internal void TransitionToGameEndPanel()
 	{
-		_gameScreen.TransitionTo(GameScreen.PanelType.Lobby);
+		_gameScreen.TransitionTo(GameScreen.PanelType.GameEnd);
+	}
+
+	public void UpdateRoomCode()
+	{
+		_gameScreen.UpdateRoomCode();
 	}
 
 	public void UpdatePlayerNumberText(string argPlayerNumber)
@@ -85,6 +91,8 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 	{
 		_gameScreen.UpdateGameEndText(argText);
 	}
+
+
 
 	#region UI Hookup Classes
 
