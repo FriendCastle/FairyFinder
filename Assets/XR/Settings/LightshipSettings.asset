@@ -15,7 +15,7 @@ MonoBehaviour:
   _apiKey: htes8zpmhHTnaBvA2yF6ykjkYzLrrIRjW1HfZXF8PgBY5ZHVrqK07NB2j48tqQMoRzWPNw
   _useLightshipDepth: 1
   _useLightshipMeshing: 1
-  _preferLidarIfAvailable: 1
+  _preferLidarIfAvailable: 0
   _useLightshipPersistentAnchor: 1
   _useLightshipSemanticSegmentation: 1
   _useLightshipScanning: 1
