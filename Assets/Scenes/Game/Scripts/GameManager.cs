@@ -130,6 +130,7 @@ public class GameManager : NetworkBehaviour
 				{
 					Debug.LogFormat("hit house {0}, fairy was in: {1}!", houseController.houseIndex.Value, fairyIndex.Value);
 					TriggerHouseInteractionServerRpc(houseController.houseIndex.Value);
+					inputEnabled = false;
 				}
 			}
 
