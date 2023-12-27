@@ -86,7 +86,7 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 
 	public void UpdatePlayerScoreText(string argPlayerNumber)
 	{
-		_gameScreen.UpdatePlayerNumberText(argPlayerNumber);
+		_gameScreen.UpdatePlayerScoreText(argPlayerNumber);
 	}
 
 
@@ -357,7 +357,7 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 
 		public void UpdatePlayerScoreText(string argPlayerScore)
 		{
-			_gamePanel.UpdatePlayerNumberText(argPlayerScore);
+			_gamePanel.UpdatePlayerScoreText(argPlayerScore);
 		}
 
 		public void UpdateGameInstructionText(string argText)
