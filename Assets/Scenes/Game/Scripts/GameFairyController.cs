@@ -26,16 +26,28 @@ public class GameFairyController : NetworkBehaviour
 
 	private void Update()
 	{
-		if (playerToFollow != null && Vector3.Distance(transform.position, playerToFollow.transform.position) > .1f)
+		if (GameNetcodeManager.instance.IsServer && playerToFollow != null)
 		{
-			Vector3 targetPosition = new Vector3(playerToFollow.transform.position.x, transform.position.y, playerToFollow.transform.position.z);
-			transform.position = Vector3.MoveTowards(transform.position, targetPosition, .5f * Time.deltaTime);
+			if (Vector3.Distance(transform.position, playerToFollow.transform.position) > .5f)
+			{
+				Vector3 targetPosition = new Vector3(playerToFollow.transform.position.x, transform.position.y, playerToFollow.transform.position.z);
 
-			Quaternion targetRotation = Quaternion.LookRotation(targetPosition - transform.position);
-			targetRotation.x = 0f;
-			targetRotation.z = 0f;
-			transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, .5f * Time.deltaTime);
+				Quaternion targetRotation = Quaternion.LookRotation(targetPosition - transform.position);
+				targetRotation.x = 0f;
+				targetRotation.z = 0f;
 
+				transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5f * Time.deltaTime);
+
+				transform.position = Vector3.MoveTowards(transform.position, targetPosition, .5f * Time.deltaTime);
+
+				model.SetSpeed(1f);
+				SetSpeedClientRpc(1f);
+			}
+			else
+			{
+				model.SetSpeed(0f);
+				SetSpeedClientRpc(0f);
+			}
 		}
 	}
 
@@ -51,5 +63,12 @@ public class GameFairyController : NetworkBehaviour
 	public void EnableModelClientRpc()
 	{
 		SetModelVisibility(true);
+	}
+
+	[ClientRpc]
+
+	public void SetSpeedClientRpc(float argSpeed)
+	{
+		model.SetSpeed(argSpeed);
 	}
 }
