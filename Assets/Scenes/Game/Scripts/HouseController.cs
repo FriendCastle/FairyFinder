@@ -7,41 +7,43 @@ using UnityEngine;
 public class HouseController : NetworkBehaviour
 {
 
-    [SerializeField] private List<GameObject> PossibleHouses;
+	[SerializeField] private List<GameObject> PossibleHouses;
 
-    [SerializeField] private List<GameObject> OrderedSparkleArea;
-    [SerializeField] private List<GameObject> OrderedSparkleExplosion;
+	[SerializeField] private List<GameObject> OrderedSparkleArea;
+	[SerializeField] private List<GameObject> OrderedSparkleExplosion;
 
-    [SerializeField] private AudioClip SoundAppear; 
-    [SerializeField] private List<AudioClip> SoundDisappearList;
+	[SerializeField] private AudioClip SoundAppear;
+	[SerializeField] private List<AudioClip> SoundDisappearList;
 
-    [SerializeField] private Vector3 SparkleOffset;
+	[SerializeField] private Vector3 SparkleOffset;
 
-    private GameObject houseObject;
+	private GameObject houseObject;
 
 	[SerializeField]
-    private GameObject fairyObject;
-    private AudioSource audioSource;
-    private Animator animator;
-    private int orderIndex;
+	private GameFairyController fairyObject;
+	private AudioSource audioSource;
+	private Animator animator;
+	private int orderIndex;
 
 	public NetworkVariable<int> houseIndex = new NetworkVariable<int>(-1);
 
 	public const float MAX_REVEAL_ANIM_TIME = 3f;
 
-    private void Awake() {
-        orderIndex = UnityEngine.Random.Range(0, OrderedSparkleArea.Count - 1);
-    }
+	private void Awake()
+	{
+		orderIndex = UnityEngine.Random.Range(0, OrderedSparkleArea.Count - 1);
+	}
 
-    void Start() {
-        int random = UnityEngine.Random.Range(0, PossibleHouses.Count - 1);
-        houseObject = Instantiate(PossibleHouses[random], transform.position, Quaternion.identity, transform);
-        audioSource = houseObject.GetComponent<AudioSource>();
-        Instantiate(OrderedSparkleArea[orderIndex], transform.position + SparkleOffset, Quaternion.identity, transform);
-        animator = houseObject.GetComponent<Animator>(); 
-        audioSource.clip = SoundAppear;
-        audioSource.Play();
-    }
+	void Start()
+	{
+		int random = UnityEngine.Random.Range(0, PossibleHouses.Count - 1);
+		houseObject = Instantiate(PossibleHouses[random], transform.position, Quaternion.identity, transform);
+		audioSource = houseObject.GetComponent<AudioSource>();
+		Instantiate(OrderedSparkleArea[orderIndex], transform.position + SparkleOffset, Quaternion.identity, transform);
+		animator = houseObject.GetComponent<Animator>();
+		audioSource.clip = SoundAppear;
+		audioSource.Play();
+	}
 
 	[ServerRpc(RequireOwnership = false)]
 	public void AssignHouseIndexServerRpc(int argHouseIndex)
@@ -50,12 +52,13 @@ public class HouseController : NetworkBehaviour
 	}
 
 
-    public void Interact() {
-        Instantiate(OrderedSparkleExplosion[orderIndex], transform.position + SparkleOffset, Quaternion.identity, transform);
-        animator.SetTrigger("Disappear");
+	public void Interact(int argPlayer)
+	{
+		Instantiate(OrderedSparkleExplosion[orderIndex], transform.position + SparkleOffset, Quaternion.identity, transform);
+		animator.SetTrigger("Disappear");
 		if (GameManager.instance.FairyIndex == houseIndex.Value)
 		{
-			StartCoroutine(RevealFairy());
+			StartCoroutine(RevealFairy(argPlayer));
 		}
 		else
 		{
@@ -64,31 +67,36 @@ public class HouseController : NetworkBehaviour
 			audioSource.Play();
 			StartCoroutine(DelayedDestroy());
 		}
-    }
+	}
 
-    public void AddFairy() {
-    }
+	private IEnumerator RevealFairy(int argPlayer)
+	{
+		if (fairyObject != null)
+		{
+			fairyObject.SetModelVisibility(true);
+			Instantiate(OrderedSparkleArea[orderIndex], transform.position, Quaternion.identity, transform);
+		}
 
-    IEnumerator RevealFairy() {
-        if (fairyObject != null) {
-            fairyObject.SetActive(true);
-            Instantiate(OrderedSparkleArea[orderIndex], transform.position, Quaternion.identity, transform);
-        }
+		yield return new WaitForSeconds(MAX_REVEAL_ANIM_TIME);
+		gameObject.SetActive(false);
 
-        yield return new WaitForSeconds(MAX_REVEAL_ANIM_TIME);
-        gameObject.SetActive(false);
+		if (GameNetcodeManager.instance.IsServer)
+		{
+			fairyObject.networkObject.TryRemoveParent();
+			fairyObject.SetFollow(argPlayer);
+		}
 
-    }
+	}
 
 	private IEnumerator DelayedDestroy()
 	{
 		yield return new WaitForSeconds(MAX_REVEAL_ANIM_TIME);
-        gameObject.SetActive(false);
+		gameObject.SetActive(false);
 	}
 
 	[ClientRpc]
-	public void TriggerHouseInteractionClientRpc()
+	public void TriggerHouseInteractionClientRpc(int argPlayer)
 	{
-		Interact();
+		Interact(argPlayer);
 	}
 }

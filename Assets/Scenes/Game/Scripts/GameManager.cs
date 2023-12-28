@@ -142,14 +142,14 @@ public class GameManager : NetworkBehaviour
 	{
 		if (GameNetcodeManager.instance.IsServer)
 		{
-			houseControllers[argHouseIndex].Interact();
+			houseControllers[argHouseIndex].Interact(playerTurn.Value);
 
 			if (argHouseIndex == fairyIndex.Value)
 			{
 				AddPointsForPlayerServerRpc(playerTurn.Value);
 			}
 
-			houseControllers[argHouseIndex].TriggerHouseInteractionClientRpc();
+			houseControllers[argHouseIndex].TriggerHouseInteractionClientRpc(playerWithMostPoints.Value);
 			StartCoroutine(WaitForInteractionAnim(argHouseIndex));
 		}
 	}

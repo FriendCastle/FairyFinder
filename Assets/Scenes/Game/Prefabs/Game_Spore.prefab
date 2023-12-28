@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8224392957773582688}
   - component: {fileID: 9116998145055907546}
   - component: {fileID: 5952277942039659556}
+  - component: {fileID: 64256134145528188}
+  - component: {fileID: 6945430960083473143}
   m_Layer: 0
   m_Name: Game_Spore
   m_TagString: Untagged
@@ -47,6 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d65fc67ac3f43479e698aa0cf2f106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _networkObject: {fileID: 64256134145528188}
   navMeshAgent: {fileID: 5952277942039659556}
   pathRenderer: {fileID: 9116998145055907546}
   model: {fileID: 3309226902641488799}
@@ -71,7 +74,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 670016893779880619}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa9c6c34ba7214d98a185db26b656d1d, type: 3}
   m_Name: 
@@ -80,6 +83,39 @@ MonoBehaviour:
   jumpDistance: 1
   jumpPenalty: 2
   pathFindingBehaviour: 2
+--- !u!114 &64256134145528188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670016893779880619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &6945430960083473143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670016893779880619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c28ed28c284b8bbb08e7d5bded1bd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _putInSharedOrigin: 1
 --- !u!1001 &3405380821493270709
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -94,15 +130,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 713041166133895568, guid: b732539cfacdadb4e8a2c3be324d7061, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.25
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 713041166133895568, guid: b732539cfacdadb4e8a2c3be324d7061, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.25
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 713041166133895568, guid: b732539cfacdadb4e8a2c3be324d7061, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.25
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 713041166133895568, guid: b732539cfacdadb4e8a2c3be324d7061, type: 3}
       propertyPath: m_LocalPosition.x

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System;
 using Random = UnityEngine.Random;
 
+// Manager to handle hosting/joining of game connection
 public class GameNetcodeManager : MonoBehaviour
 {
 	public static GameNetcodeManager instance { get; private set; }

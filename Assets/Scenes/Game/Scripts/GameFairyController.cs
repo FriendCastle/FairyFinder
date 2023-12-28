@@ -8,6 +8,10 @@ using UnityEngine;
 public class GameFairyController : MonoBehaviour
 {
 	[SerializeField]
+	private NetworkObject _networkObject;
+	public NetworkObject networkObject => _networkObject;
+
+	[SerializeField]
 	private LightshipNavMeshAgent navMeshAgent;
 
 	[SerializeField]
@@ -26,10 +30,17 @@ public class GameFairyController : MonoBehaviour
 	public void SetModelVisibility(bool argVisible)
 	{
 		model.SetActive(argVisible);
-		pathRenderer.enabled = argVisible;
 	}
 
 	private void Update()
 	{
+	}
+
+	public void SetFollow(int argPlayerToFollow)
+	{
+		Debug.Log("Set fairy to follow player " + argPlayerToFollow);
+		
+		// temp
+		gameObject.SetActive(false);
 	}
 }
