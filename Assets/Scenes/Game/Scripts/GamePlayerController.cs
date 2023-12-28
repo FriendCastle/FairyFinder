@@ -11,6 +11,7 @@ public class GamePlayerController : NetworkBehaviour
 
 	[SerializeField]
 	private NetworkObject _networkObject;
+	public NetworkObject networkObject => _networkObject;
 
 	[SerializeField]
 	private GameObject _model;

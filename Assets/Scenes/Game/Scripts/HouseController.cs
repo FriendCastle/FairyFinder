@@ -19,8 +19,6 @@ public class HouseController : NetworkBehaviour
 
 	private GameObject houseObject;
 
-	[SerializeField]
-	private GameFairyController fairyObject;
 	private AudioSource audioSource;
 	private Animator animator;
 	private int orderIndex;
@@ -71,21 +69,10 @@ public class HouseController : NetworkBehaviour
 
 	private IEnumerator RevealFairy(int argPlayer)
 	{
-		if (fairyObject != null)
-		{
-			fairyObject.SetModelVisibility(true);
-			Instantiate(OrderedSparkleArea[orderIndex], transform.position, Quaternion.identity, transform);
-		}
+		Instantiate(OrderedSparkleArea[orderIndex], transform.position, Quaternion.identity, transform);
 
 		yield return new WaitForSeconds(MAX_REVEAL_ANIM_TIME);
 		gameObject.SetActive(false);
-
-		if (GameNetcodeManager.instance.IsServer)
-		{
-			fairyObject.networkObject.TryRemoveParent();
-			fairyObject.SetFollow(argPlayer);
-		}
-
 	}
 
 	private IEnumerator DelayedDestroy()

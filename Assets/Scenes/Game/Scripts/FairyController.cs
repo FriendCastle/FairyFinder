@@ -33,4 +33,9 @@ public class FairyController : MonoBehaviour
 		audioSource.clip = SoundVoiceList[random];
 		audioSource.Play();
 	}
+
+	public void SetSpeed(float argSpeed)
+	{
+		animator.SetFloat("Speed", argSpeed);
+	}
 }

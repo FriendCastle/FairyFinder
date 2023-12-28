@@ -25,6 +25,9 @@ public class GameManager : NetworkBehaviour
 	[SerializeField]
 	private HouseController _housePrefab;
 
+	[SerializeField]
+	private GameFairyController _fairyPrefab;
+
 	public string roomName { get; private set; }
 
 	public const int MIN_PLAYER_COUNT = 2;
@@ -55,7 +58,6 @@ public class GameManager : NetworkBehaviour
 	private const int MAX_ROUND_COUNT = 3;
 	private int currentRoundCount = 0;
 
-
 	// Player score information to be synced for all clients
 	private Dictionary<int, int> playerPointDict = new Dictionary<int, int>();
 	private NetworkVariable<int> playerWithMostPoints = new NetworkVariable<int>();
@@ -64,6 +66,8 @@ public class GameManager : NetworkBehaviour
 	// Fairy index used to track which house the fairy is hiding in for the current round to be synced for all clients
 	private NetworkVariable<int> fairyIndex = new NetworkVariable<int>(-1);
 	public int FairyIndex => fairyIndex.Value;
+
+	private GameFairyController currentFairy;
 
 	private void Awake()
 	{
@@ -147,6 +151,12 @@ public class GameManager : NetworkBehaviour
 			if (argHouseIndex == fairyIndex.Value)
 			{
 				AddPointsForPlayerServerRpc(playerTurn.Value);
+
+				currentFairy = Instantiate(_fairyPrefab, houseControllers[fairyIndex.Value].transform.position, Quaternion.identity);
+				currentFairy.networkObject.Spawn();
+				currentFairy.EnableModelClientRpc();
+				currentFairy.SetModelVisibility(true);
+				currentFairy.SetFollow(playerTurn.Value);
 			}
 
 			houseControllers[argHouseIndex].TriggerHouseInteractionClientRpc(playerWithMostPoints.Value);

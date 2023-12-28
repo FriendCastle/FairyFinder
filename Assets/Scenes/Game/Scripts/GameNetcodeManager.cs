@@ -220,4 +220,17 @@ public class GameNetcodeManager : MonoBehaviour
 	{
 		OnClientConnected -= argOnPlayerConnected;
 	}
+
+	public NetworkObject GetClientObjectThatMatchesPlayerId(int argPlayerId)
+	{
+		foreach (var player in clientContainerDict)
+		{
+			if (player.Value.playerName == argPlayerId.ToString())
+			{
+				return player.Value.gamePlayerController.networkObject;
+			}
+		}
+
+		return null;
+	}
 }
