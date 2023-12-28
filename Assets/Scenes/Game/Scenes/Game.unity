@@ -5746,6 +5746,7 @@ MonoBehaviour:
   xrOrigin: {fileID: 2038771187}
   arSession: {fileID: 1901929324}
   _housePrefab: {fileID: 1128024128905907340, guid: 9c3bb41081ef7144f8b7af8c98af33f2, type: 3}
+  _fairyPrefab: {fileID: 8224392957773582688, guid: 26a428ea6eb8742c49e5ea2fd22f28d3, type: 3}
 --- !u!114 &1673720882
 MonoBehaviour:
   m_ObjectHideFlags: 0

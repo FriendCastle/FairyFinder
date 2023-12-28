@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System;
 using Random = UnityEngine.Random;
 
+// Manager to handle hosting/joining of game connection
 public class GameNetcodeManager : MonoBehaviour
 {
 	public static GameNetcodeManager instance { get; private set; }
@@ -218,5 +219,18 @@ public class GameNetcodeManager : MonoBehaviour
 	public void RemoveOnPlayerConnectedListener(System.Action<ulong, int> argOnPlayerConnected)
 	{
 		OnClientConnected -= argOnPlayerConnected;
+	}
+
+	public NetworkObject GetClientObjectThatMatchesPlayerId(int argPlayerId)
+	{
+		foreach (var player in clientContainerDict)
+		{
+			if (player.Value.playerName == argPlayerId.ToString())
+			{
+				return player.Value.gamePlayerController.networkObject;
+			}
+		}
+
+		return null;
 	}
 }

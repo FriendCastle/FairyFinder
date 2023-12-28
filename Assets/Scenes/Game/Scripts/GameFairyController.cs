@@ -1,12 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using Niantic.Lightship.AR.NavigationMesh;
-using Niantic.Lightship.SharedAR.Netcode;
 using Unity.Netcode;
 using UnityEngine;
 
-public class GameFairyController : MonoBehaviour
+public class GameFairyController : NetworkBehaviour
 {
+	[SerializeField]
+	private NetworkObject _networkObject;
+	public NetworkObject networkObject => _networkObject;
+
 	[SerializeField]
 	private LightshipNavMeshAgent navMeshAgent;
 
@@ -14,38 +15,60 @@ public class GameFairyController : MonoBehaviour
 	private LightshipNavMeshAgentPathRenderer pathRenderer;
 
 	[SerializeField]
-	private GameObject model;
+	private FairyController model;
 
-	private LightshipNavMeshManager navMeshManager;
-
-	private const float MIN_TIME_BETWEEN_MOVEMENT_ATTEMPT = 5f;
-	private float currentTimeBetweenMovement = 0f;
-
-	public void Init(LightshipNavMeshManager argLightshipNavMeshManager)
-	{
-		navMeshManager = argLightshipNavMeshManager;
-	}
+	private NetworkObject playerToFollow;
 
 	public void SetModelVisibility(bool argVisible)
 	{
-		model.SetActive(argVisible);
-		pathRenderer.enabled = argVisible;
+		model.gameObject.SetActive(argVisible);
 	}
 
 	private void Update()
 	{
-		if (currentTimeBetweenMovement >= MIN_TIME_BETWEEN_MOVEMENT_ATTEMPT)
+		if (GameNetcodeManager.instance.IsServer && playerToFollow != null)
 		{
-			currentTimeBetweenMovement = 0f;
-			bool foundPosition = navMeshManager.LightshipNavMesh.FindRandomPosition(out Vector3 randomPos);
-			if (foundPosition)
+			if (Vector3.Distance(transform.position, playerToFollow.transform.position) > .5f)
 			{
-				navMeshAgent.SetDestination(randomPos);
+				Vector3 targetPosition = new Vector3(playerToFollow.transform.position.x, transform.position.y, playerToFollow.transform.position.z);
+
+				Quaternion targetRotation = Quaternion.LookRotation(targetPosition - transform.position);
+				targetRotation.x = 0f;
+				targetRotation.z = 0f;
+
+				transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5f * Time.deltaTime);
+
+				transform.position = Vector3.MoveTowards(transform.position, targetPosition, .5f * Time.deltaTime);
+
+				model.SetSpeed(1f);
+				SetSpeedClientRpc(1f);
+			}
+			else
+			{
+				model.SetSpeed(0f);
+				SetSpeedClientRpc(0f);
 			}
 		}
-		else
-		{
-			currentTimeBetweenMovement += Time.deltaTime;
-		}
+	}
+
+	public void SetFollow(int argPlayerToFollow)
+	{
+		Debug.Log("Set fairy to follow player " + argPlayerToFollow);
+
+		playerToFollow = GameNetcodeManager.instance.GetClientObjectThatMatchesPlayerId(argPlayerToFollow);
+	}
+
+	[ClientRpc]
+
+	public void EnableModelClientRpc()
+	{
+		SetModelVisibility(true);
+	}
+
+	[ClientRpc]
+
+	public void SetSpeedClientRpc(float argSpeed)
+	{
+		model.SetSpeed(argSpeed);
 	}
 }

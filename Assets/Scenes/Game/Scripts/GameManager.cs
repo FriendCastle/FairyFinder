@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Niantic.Lightship.AR.NavigationMesh;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using Random = UnityEngine.Random;
 
+// Game Manager Class to control the game state inlcuding rounds, points, and network objects
 public class GameManager : NetworkBehaviour
 {
 	public static GameManager instance { get; private set; }
@@ -24,6 +24,9 @@ public class GameManager : NetworkBehaviour
 
 	[SerializeField]
 	private HouseController _housePrefab;
+
+	[SerializeField]
+	private GameFairyController _fairyPrefab;
 
 	public string roomName { get; private set; }
 
@@ -52,15 +55,19 @@ public class GameManager : NetworkBehaviour
 	private int playerId = -1;
 	private Camera arCamera => Camera.main;
 
-	private NetworkVariable<int> fairyIndex = new NetworkVariable<int>(-1);
-	public int FairyIndex => fairyIndex.Value;
-
 	private const int MAX_ROUND_COUNT = 3;
 	private int currentRoundCount = 0;
 
-	private Dictionary<string, int> playerPointDict = new Dictionary<string, int>();
+	// Player score information to be synced for all clients
+	private Dictionary<int, int> playerPointDict = new Dictionary<int, int>();
 	private NetworkVariable<int> playerWithMostPoints = new NetworkVariable<int>();
 	private NetworkVariable<int> mostPointCount = new NetworkVariable<int>(-1);
+
+	// Fairy index used to track which house the fairy is hiding in for the current round to be synced for all clients
+	private NetworkVariable<int> fairyIndex = new NetworkVariable<int>(-1);
+	public int FairyIndex => fairyIndex.Value;
+
+	private GameFairyController currentFairy;
 
 	private void Awake()
 	{
@@ -127,6 +134,7 @@ public class GameManager : NetworkBehaviour
 				{
 					Debug.LogFormat("hit house {0}, fairy was in: {1}!", houseController.houseIndex.Value, fairyIndex.Value);
 					TriggerHouseInteractionServerRpc(houseController.houseIndex.Value);
+					inputEnabled = false;
 				}
 			}
 
@@ -138,14 +146,20 @@ public class GameManager : NetworkBehaviour
 	{
 		if (GameNetcodeManager.instance.IsServer)
 		{
-			houseControllers[argHouseIndex].Interact();
+			houseControllers[argHouseIndex].Interact(playerTurn.Value);
 
 			if (argHouseIndex == fairyIndex.Value)
 			{
-				AddPointsForPlayerServerRpc(playerTurn.Value.ToString());
+				AddPointsForPlayerServerRpc(playerTurn.Value);
+
+				currentFairy = Instantiate(_fairyPrefab, houseControllers[fairyIndex.Value].transform.position, Quaternion.identity);
+				currentFairy.networkObject.Spawn();
+				currentFairy.EnableModelClientRpc();
+				currentFairy.SetModelVisibility(true);
+				currentFairy.SetFollow(playerTurn.Value);
 			}
 
-			houseControllers[argHouseIndex].TriggerHouseInteractionClientRpc();
+			houseControllers[argHouseIndex].TriggerHouseInteractionClientRpc(playerWithMostPoints.Value);
 			StartCoroutine(WaitForInteractionAnim(argHouseIndex));
 		}
 	}
@@ -287,13 +301,13 @@ public class GameManager : NetworkBehaviour
 	}
 
 	[ServerRpc(RequireOwnership = false)]
-	private void AddPointsForPlayerServerRpc(string argPlayer)
+	private void AddPointsForPlayerServerRpc(int argPlayer)
 	{
 		playerPointDict[argPlayer]++;
 		Debug.LogFormat("player {0} got a point! now: {1}", argPlayer, playerPointDict[argPlayer]);
 
 		int maxPoints = int.MinValue;
-		KeyValuePair<string, int> winningPlayer = default;
+		KeyValuePair<int, int> winningPlayer = default;
 
 		foreach (var player in playerPointDict)
 		{
@@ -306,6 +320,22 @@ public class GameManager : NetworkBehaviour
 
 		playerWithMostPoints.Value = Convert.ToInt32(winningPlayer.Key);
 		mostPointCount.Value = winningPlayer.Value;
+
+		GameUIManager.instance.UpdatePlayerScoreText(string.Format("Score: {0}", playerPointDict[playerId]));
+
+		foreach (var player in playerPointDict)
+		{
+			SetPlayerScoreClientRpc(player.Key, player.Value);
+		}
+	}
+
+	[ClientRpc]
+	public void SetPlayerScoreClientRpc(int argPlayerId, int argPoints)
+	{
+		if (playerId == argPlayerId)
+		{
+			GameUIManager.instance.UpdatePlayerScoreText(string.Format("Score: {0}", argPoints));
+		}
 	}
 
 	[ClientRpc]
@@ -345,7 +375,7 @@ public class GameManager : NetworkBehaviour
 
 				foreach (var client in GameNetcodeManager.instance.ClientContainerDict)
 				{
-					playerPointDict[client.Value.playerName] = 0;
+					playerPointDict[Convert.ToInt32(client.Value.playerName)] = 0;
 				}
 			}
 		}

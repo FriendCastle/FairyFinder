@@ -4,11 +4,13 @@ using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
+// Interface to make transitioning between screens and panels easier
 public interface ITransitioner
 {
 	public void TransitionTo(int argToIndex);
 }
 
+// UI Manager class to handle all UI interactions/setup
 public class GameUIManager : MonoBehaviour, ITransitioner
 {
 	public static GameUIManager instance { get; private set; }
@@ -81,6 +83,12 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 	{
 		_gameScreen.UpdatePlayerNumberText(argPlayerNumber);
 	}
+
+	public void UpdatePlayerScoreText(string argPlayerNumber)
+	{
+		_gameScreen.UpdatePlayerScoreText(argPlayerNumber);
+	}
+
 
 	public void UpdateGameInstructionText(string argText)
 	{
@@ -347,6 +355,11 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 			_gamePanel.UpdatePlayerNumberText(argPlayerNumber);
 		}
 
+		public void UpdatePlayerScoreText(string argPlayerScore)
+		{
+			_gamePanel.UpdatePlayerScoreText(argPlayerScore);
+		}
+
 		public void UpdateGameInstructionText(string argText)
 		{
 			_gamePanel.UpdateInstructionText(argText);
@@ -387,6 +400,9 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 			private TMP_Text _playerNumberText;
 
 			[SerializeField]
+			private TMP_Text _playerScoreText;
+
+			[SerializeField]
 			private TMP_Text _instructionText;
 
 			public override void Setup(Screen argPanelOwner)
@@ -397,6 +413,11 @@ public class GameUIManager : MonoBehaviour, ITransitioner
 			public void UpdatePlayerNumberText(string argText)
 			{
 				_playerNumberText.text = argText;
+			}
+
+			public void UpdatePlayerScoreText(string argText)
+			{
+				_playerScoreText.text = argText;
 			}
 
 			public void UpdateInstructionText(string argText)
