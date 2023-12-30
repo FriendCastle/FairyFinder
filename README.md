@@ -13,7 +13,7 @@ The goal of the game is to get points over a series of rounds in which each play
 
 At the end of the game, whoever has the most points will win and receive a fairy-themed celebration! 
 
-## Current Development
+## Development
 
 For this project, we are specifically focused on utilizing Lightship's shared AR space tech using image tracking colocalization and navigation mesh management.
 
@@ -25,13 +25,16 @@ We also have a scene in which players can choose to host or join a room to see e
 
 We separately have started setup for the types of interactions and animations we plan on showing throughout the coarse of the game.
 
-Our next steps are to unify these experiments to get the base gameplay working in a scene so we can start playtesting.
+We unified these experiments and created Fairy Finder in the Game scene with a fully functioning game with room hosting and joining.
 
+It was our first time working with unity's netcode so it took quite a bit of effort but we were happy with the results and the initial experimentation using Niantic's shared AR tech and look forward to working with it more in the future,
 
-### Current Issues
-- iPhone 15 Pro Max
+### Issues Encountered
+- iPhone Pro Devices
 	- Nav Mesh Management not working
-	- need to reach out to Niantic about why/if it's known/expected
+	- Reached out to Niantic
+		- Turns out it was due to the setting "Prefer LiDAR if avalable"
+		- We turned this off and it worked!
 
 ### Findings
 - From experimenting with nav meshes and utilizing image tracking for the shared AR space, it seems that it might be too difficult to get everyone's devices on the same page.
